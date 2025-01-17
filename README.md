@@ -68,6 +68,25 @@ SDL_HAPTIC_EFFECT_STATUS        <-- SDL_HAPTIC_STATUS
 SDL_HAPTIC_EFFECT_PAUSE         <-- SDL_HAPTIC_PAUSE
 ```
 
+
+# Examples
+
+I took the official SDL3 examples [here](https://examples.libsdl.org/SDL3/) and
+converted most of them directly to Nim programs you can find in `examples/`.
+
+Run one from the root of this repo, like this: `nim r examples/renderer/01-clear/clear.nim`
+
+If you're using VS Code, and have the Nim extension installed, you can open one of the examples
+and select `"Nim: Run selected Nim file"` from the Command Palette.
+
+**Note: All of the official examples for SDL3 use the new SDL callbacks system in
+lieu of having their own `main()`, and the Nim rewrites do not do this.**
+
+Additionally, the Nim version of the BytePusher example does not take commandline
+arguments, unlike the original C version. There's no particular reason for this,
+I just skipped it.
+
+
 # Problems
 
 If anything is busted or _seems_ busted, or has poor ergonomics for you, please
