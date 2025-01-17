@@ -4404,8 +4404,8 @@ proc SDL_GetTouchDeviceName* ( touchID: SDL_TouchID ): cstring {.importc.}
 proc SDL_GetTouchDeviceType* ( touchID: SDL_TouchID ): SDL_TouchDeviceType {.importc.}
 proc SDL_GetTouchFingers* ( touchID: SDL_TouchID, count: var int ): ptr UncheckedArray[ptr SDL_Finger] {.importc.}
 
-const SDL_TOUCH_MOUSEID* = (-1).SDL_MouseID
-const SDL_MOUSE_TOUCHID* = (-1).SDL_TouchID
+const SDL_TOUCH_MOUSEID* = cast[SDL_MouseID]( -1 )
+const SDL_MOUSE_TOUCHID* = cast[SDL_TouchID]( -1 )
 
 #endregion
 
