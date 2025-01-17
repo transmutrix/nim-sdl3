@@ -114,6 +114,9 @@ and you need it, please reach out.
 - [ ] Publish a release for [SDL preview-3.1.8](https://github.com/libsdl-org/SDL/releases/tag/preview-3.1.8)
 - [ ] Update and make a release for SDL [prerelease-3.1.10](https://github.com/libsdl-org/SDL/releases/tag/prerelease-3.1.10)
 - [ ] Make sure we're fine on Nim stable and also that the _examples_ are.
+- [ ] What do we do about shaders?
+- [ ] Should we go through all the more fine-grained tests?
+
 
 # Done
 
