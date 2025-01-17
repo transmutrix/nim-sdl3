@@ -76,8 +76,9 @@ converted most of them directly to Nim programs you can find in `examples/`.
 
 Run one from the root of this repo, like this: `nim r examples/renderer/01-clear/clear.nim`
 
-If you're using VS Code, and have the Nim extension installed, you can open one of the examples
-and select `"Nim: Run selected Nim file"` from the Command Palette.
+If you're using VS Code, and have the Nim extension installed, you can simply
+open one of the examples and press F6 or select `"Nim: Run selected Nim file"`
+from the Command Palette.
 
 **Note: All of the official examples for SDL3 use the new SDL callbacks system in
 lieu of having their own `main()`, and the Nim rewrites do not do this.**
@@ -98,8 +99,8 @@ and you need it, please reach out.
 # To-do
 
 - [ ] Test on Windows and Fedora and make sure our library includes are correct.
+- [ ] Get Emscripten builds going.
 - [ ] Go implement all the `SDL_FORCE_INLINE` rect utility funcs.
-- [ ] Put the examples in and add some instructions for those.
 - [ ] Make bindings for SDL3 image, mixer, ttf, etc. and add them here (in separate files).
 - [ ] Make a "documented" option with _all_ the copious doc comments from the
       SDL3 headers, for those hoping to explore SDL for the first time with Nim.
@@ -108,3 +109,7 @@ and you need it, please reach out.
 - [ ] Publish a release for [SDL preview-3.1.8](https://github.com/libsdl-org/SDL/releases/tag/preview-3.1.8)
 - [ ] Update and make a release for SDL [prerelease-3.1.10](https://github.com/libsdl-org/SDL/releases/tag/prerelease-3.1.10)
 - [ ] Make sure we're fine on Nim stable and also that the _examples_ are.
+
+# Done
+
+- [x] (Jan 17, 2025) Put the examples in and add some instructions for those.
