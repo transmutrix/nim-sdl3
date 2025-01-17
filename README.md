@@ -7,11 +7,9 @@ This package contains SDL3 bindings for Nim.
 
 You must install the SDL3 C libraries on your system to use the Nim bindings.
 
-On Windows, just grab the appropriate prebuilt SDL3 DLL for your system.
-
-On macOS, I would recommend building SDL3 from source at this time.
-
-On Linux, see if sdl3 is in your package manager, and is the version you want,
+- On Windows, just grab the appropriate prebuilt SDL3 DLL for your system.
+- On macOS, I would recommend building SDL3 from source at this time.
+- On Linux, see if sdl3 is in your package manager, and is the version you want,
 and otherwise build from source.
 
 Currently, this package is written against the `preview-3.1.8` release of SDL3,
