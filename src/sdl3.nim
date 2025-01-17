@@ -13,10 +13,6 @@ when defined(windows):
   const LibName* = "SDL3.dll"
 elif defined(macosx):
   const LibName* = "libSDL3.dylib"
-# elif defined(openbsd):
-#   const LibName* = "libSDL3.so.0.6"
-# elif defined(haiku):
-#   const LibName* = "libSDL3-2.0.so.0"
 elif defined(emscripten):
   const LibName* = "libSDL3.so"
 else:
