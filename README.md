@@ -102,7 +102,7 @@ and you need it, please reach out.
 
 # To-do
 
-- [ ] Get Emscripten builds going.
+- [ ] **NEXT** Get Emscripten builds going.
 - [ ] Go implement all the `SDL_FORCE_INLINE` rect utility funcs.
 - [ ] Make bindings for SDL3 image, mixer, ttf, etc. and add them here (in separate files).
 - [ ] Make a "documented" option with _all_ the copious doc comments from the
