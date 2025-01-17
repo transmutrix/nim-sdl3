@@ -6,7 +6,13 @@ This package contains SDL3 bindings for Nim.
 # Pre-Requisites
 
 You must install the SDL3 C libraries on your system to use the Nim bindings.
-I would recommend building SDL3 from source at this time, particularly on macOS.
+
+On Windows, just grab the appropriate prebuilt SDL3 DLL for your system.
+
+On macOS, I would recommend building SDL3 from source at this time.
+
+On Linux, see if sdl3 is in your package manager, and is the version you want,
+and otherwise build from source.
 
 Currently, this package is written against the `preview-3.1.8` release of SDL3,
 which you can find here:
@@ -98,7 +104,6 @@ and you need it, please reach out.
 
 # To-do
 
-- [ ] Test on Windows and Fedora and make sure our library includes are correct.
 - [ ] Get Emscripten builds going.
 - [ ] Go implement all the `SDL_FORCE_INLINE` rect utility funcs.
 - [ ] Make bindings for SDL3 image, mixer, ttf, etc. and add them here (in separate files).
@@ -112,4 +117,5 @@ and you need it, please reach out.
 
 # Done
 
+- [x] (Jan 17, 2025) Test on Windows and Fedora and make sure our library includes are correct.
 - [x] (Jan 17, 2025) Put the examples in and add some instructions for those.
