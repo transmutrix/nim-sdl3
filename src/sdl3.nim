@@ -15,6 +15,8 @@ elif defined(macosx):
   const LibName* = "libSDL3.dylib"
 elif defined(emscripten):
   const LibName* = "libSDL3.so"
+  proc emscripten_set_main_loop* ( f: proc() {.cdecl.}, a: cint, b: bool ) {.importc.}
+  proc emscripten_cancel_main_loop* ()  {.importc.}
 else:
   const LibName* = "libSDL3.so"
 {.pop.}

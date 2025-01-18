@@ -102,7 +102,6 @@ and you need it, please reach out.
 
 # To-do
 
-- [ ] **NEXT** Get Emscripten builds going.
 - [ ] Go implement all the `SDL_FORCE_INLINE` rect utility funcs.
 - [ ] Make bindings for SDL3 image, mixer, ttf, etc. and add them here (in separate files).
 - [ ] Make a "documented" option with _all_ the copious doc comments from the
@@ -118,5 +117,6 @@ and you need it, please reach out.
 
 # Done
 
+- [x] (Jan 17, 2025) Function imports for Emscripten builds.
 - [x] (Jan 17, 2025) Test on Windows and Fedora and make sure our library includes are correct.
 - [x] (Jan 17, 2025) Put the examples in and add some instructions for those.
