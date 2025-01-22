@@ -4,10 +4,8 @@
 # NOTE: Opaque pointer types like SDL_Texture are defined as `pointer`, since
 #  these are never, ever dereferenced. This lowers syntax noise.
 
-# import std/macros
 import std/strutils
 import std/bitops
-export strutils.`%`
 
 {.push warning[user]: off}
 when defined(emscripten):
@@ -21,7 +19,6 @@ elif defined(macosx):
 else:
   const LibName* = "libSDL3.so"
 {.pop.}
-
 
 when defined(emscripten):
   {.push callConv: cdecl.}
@@ -2316,7 +2313,6 @@ const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_DEPTH_FLOAT* =   "SDL.gpu.texture.
 const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_UINT8* = "SDL.gpu.texture.create.d3d12.clear.stencil"
 
 const SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING* = "SDL.gpu.texture.create.name"
-const SDL_PROP_GPU_BUFFER_CREATE_NAME_STRING* = "SDL.gpu.buffer.create.name"
 const SDL_PROP_GPU_TRANSFERBUFFER_CREATE_NAME_STRING* = "SDL.gpu.transferbuffer.create.name"
 
 #endregion
@@ -4154,8 +4150,8 @@ type
     SDL_PEN_AXIS_TANGENTIAL_PRESSURE,
     SDL_PEN_AXIS_COUNT
 
-const SDL_PEN_MOUSEID* = (-2).SDL_MouseID
-const SDL_PEN_TOUCHID* = (-2).SDL_MouseID
+const SDL_PEN_MOUSEID* = cast[SDL_MouseID](-2)
+const SDL_PEN_TOUCHID* = cast[SDL_MouseID](-2)
 
 const SDL_PEN_INPUT_DOWN* =       (1'u shl 0)  # pen is pressed down
 const SDL_PEN_INPUT_BUTTON_1* =   (1'u shl 1)  # button 1 is pressed
@@ -5453,3 +5449,4 @@ const SDL_PROP_APP_METADATA_TYPE_STRING*: cstring        = "SDL.app.metadata.typ
 #  Make an issue on GH if you'd like to have it, and I'll see what I can do!
 #endregion
 
+{.pop.}
