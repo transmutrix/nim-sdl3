@@ -102,14 +102,11 @@ and you need it, please reach out.
 
 # To-do
 
-- [ ] Go implement all the `SDL_FORCE_INLINE` rect utility funcs.
 - [ ] Make bindings for SDL3 image, mixer, ttf, etc. and add them here (in separate files).
 - [ ] Make a "documented" option with _all_ the copious doc comments from the
       SDL3 headers, for those hoping to explore SDL for the first time with Nim.
       I have neglected this so far because it _dramatically_ increases the file
       size.
-- [ ] Publish a release for [SDL preview-3.1.8](https://github.com/libsdl-org/SDL/releases/tag/preview-3.1.8)
-- [ ] Update and make a release for SDL [prerelease-3.1.10](https://github.com/libsdl-org/SDL/releases/tag/prerelease-3.1.10)
 - [ ] Make sure we're fine on Nim stable and also that the _examples_ are.
 - [ ] What do we do about shaders?
 - [ ] Should we go through all the more fine-grained tests?
@@ -117,6 +114,8 @@ and you need it, please reach out.
 
 # Done
 
+- [x] (Jan 22, 2025) Make a release for [SDL-3.2.0](https://github.com/libsdl-org/SDL/releases/tag/release-3.2.0)
+- [x] (Jan 22, 2025) Go implement all the `SDL_FORCE_INLINE` rect utility funcs.
 - [x] (Jan 17, 2025) Function imports for Emscripten builds.
 - [x] (Jan 17, 2025) Test on Windows and Fedora and make sure our library includes are correct.
 - [x] (Jan 17, 2025) Put the examples in and add some instructions for those.
