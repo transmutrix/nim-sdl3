@@ -6,6 +6,7 @@
 
 # import std/macros
 import std/strutils
+import std/bitops
 export strutils.`%`
 
 {.push warning[user]: off}
@@ -199,10 +200,32 @@ proc SDL_tanf* ( x: cfloat ): cfloat {.importc.}
 
 type SDL_FunctionPointer* = proc (): void {.cdecl.}
 
+const SDL_MAX_SINT8*  = int8 0x7F                 # 127
+const SDL_MIN_SINT8*  = int8 (bitnot 0x7F)        # -128
+const SDL_MAX_UINT8*  = uint8 0xFF                # 255
+const SDL_MIN_UINT8*  = uint8 0x00                # 0
+const SDL_MAX_SINT16* = int16 0x7FFF              # 32767
+const SDL_MIN_SINT16* = int16 (bitnot 0x7FFF)     # -32768
+const SDL_MAX_UINT16* = uint16 0xFFFF             # 65535
+const SDL_MIN_UINT16* = uint16 0x0000             # 0
+const SDL_MAX_SINT32* = int32 0x7FFFFFFF          # 2147483647
+const SDL_MIN_SINT32* = int32 (bitnot 0x7FFFFFFF) # -2147483648
+const SDL_MAX_UINT32* = uint32 0xFFFFFFFF         # 4294967295
+const SDL_MIN_UINT32* = uint32 0x00000000         # 0
+const SDL_MAX_SINT64* = int64 0x7FFFFFFFFFFFFFFF         # 9223372036854775807
+const SDL_MIN_SINT64* = bitnot int64(0x7FFFFFFFFFFFFFFF) # -9223372036854775808
+const SDL_MAX_UINT64* = cast[uint64](0xFFFFFFFFFFFFFFFF) # 18446744073709551615
+const SDL_MIN_UINT64* = uint64 0x0000000000000000        # 0
+const SDL_MAX_TIME* = SDL_MAX_SINT64
+const SDL_MIN_TIME* = SDL_MIN_SINT64
+const SDL_FLT_EPSILON* = 1.1920928955078125e-07'f32 # 0x0.000002p0
+
 #endregion
 
 
 #region SDL3/SDL_assert.h -----------------------------------------------------
+
+# TODO: Do we need/want SDL's asserts?
 
 #endregion
 
@@ -1035,23 +1058,56 @@ proc SDL_RectToFRect* ( rect: ptr SDL_Rect, frect: ptr SDL_FRect ): void {.inlin
   frect.w = rect.w.float
   frect.h = rect.h.float
 
-# proc SDL_PointInRect* ( p: ptr SDL_Point, r: ptr SDL_Rect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_RectEmpty* ( r: ptr SDL_Rect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_RectsEqual* ( a, b: ptr SDL_Rect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_HasRectIntersection* ( A,B: ptr SDL_Rect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectIntersection* ( A,B: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectUnion* ( A,B: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectEnclosingPoints* ( points: openarray[SDL_Point], clip: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectAndLineIntersection* ( rect: ptr SDL_Rect, X1,Y1,X2,Y2: var int ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_PointInRectFloat* ( p: ptr SDL_FPoint, r: ptr SDL_FRect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_RectEmptyFloat* ( r: ptr SDL_FRect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_RectsEqualEpsilon* ( a,b: ptr SDL_FRect, epsilon: cfloat ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_RectsEqualFloat* ( a,b: ptr SDL_FRect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_HasRectIntersectionFloat* ( A,B: ptr SDL_FRect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectIntersectionFloat* ( A,B: ptr SDL_FRect, result: var SDL_FRect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectUnionFloat* ( A,B: ptr SDL_FRect, result: var SDL_FRect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectEnclosingPointsFloat* ( points: openarray[SDL_FPoint], clip: ptr SDL_FRect, result: var SDL_FRect ): bool {.importc.} # TODO: IMPLEMENT
-# proc SDL_GetRectAndLineIntersectionFloat* ( rect: ptr SDL_FRect, X1,Y1,X2,Y2: var cfloat ): bool {.importc.} # TODO: IMPLEMENT
+func SDL_PointInRect* ( p: ptr SDL_Point, r: ptr SDL_Rect ): bool {.inline.} =
+  p != nil and r != nil and
+  p.x >= r.x and p.x < r.x + r.w and
+  p.y >= r.y and p.y < r.y + r.h
+
+func SDL_RectEmpty* ( r: ptr SDL_Rect ): bool {.inline.} =
+  r == nil or
+  r.w <= 0 or
+  r.h <= 0
+
+func SDL_RectsEqual* ( a, b: ptr SDL_Rect ): bool {.inline.} =
+  a != nil and b != nil and
+  a.x == b.x and a.y == b.y and
+  a.w == b.w and a.h == b.h
+
+func SDL_HasRectIntersection* ( A,B: ptr SDL_Rect ): bool {.importc.}
+proc SDL_GetRectIntersection* ( A,B: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.}
+proc SDL_GetRectUnion* ( A,B: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.}
+proc SDL_GetRectEnclosingPoints* ( points: openarray[SDL_Point], clip: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.}
+proc SDL_GetRectAndLineIntersection* ( rect: ptr SDL_Rect, X1,Y1,X2,Y2: var int ): bool {.importc.}
+
+proc SDL_PointInRectFloat* ( p: ptr SDL_FPoint, r: ptr SDL_FRect ): bool {.inline.} =
+  ## Note that this follows a different logic to SDL_PointInRect, as this proc
+  ## checks _inclusive_ ranges.
+  p != nil and r != nil and
+  p.x >= r.x and p.x <= r.x + r.w and
+  p.y >= r.y and p.y <= r.y + r.h
+
+proc SDL_RectEmptyFloat* ( r: ptr SDL_FRect ): bool {.inline.} =
+  ## Note that r.w == 0 is considered NON-EMPTY for FRect, but not for Rect.
+  r == nil or
+  r.w < 0 or
+  r.h < 0
+
+proc SDL_RectsEqualEpsilon* ( a,b: ptr SDL_FRect, epsilon: cfloat ): bool {.inline.} =
+  a != nil and b != nil and (a == b or (
+    SDL_fabsf(a.x - b.x) <= epsilon and
+    SDL_fabsf(a.y - b.y) <= epsilon and
+    SDL_fabsf(a.w - b.w) <= epsilon and
+    SDL_fabsf(a.h - b.h) <= epsilon
+  ))
+
+proc SDL_RectsEqualFloat* ( a,b: ptr SDL_FRect ): bool {.inline.} =
+  SDL_RectsEqualEpsilon(a,b, SDL_FLT_EPSILON)
+
+proc SDL_HasRectIntersectionFloat* ( A,B: ptr SDL_FRect ): bool {.importc.}
+proc SDL_GetRectIntersectionFloat* ( A,B: ptr SDL_FRect, result: var SDL_FRect ): bool {.importc.}
+proc SDL_GetRectUnionFloat* ( A,B: ptr SDL_FRect, result: var SDL_FRect ): bool {.importc.}
+proc SDL_GetRectEnclosingPointsFloat* ( points: openarray[SDL_FPoint], clip: ptr SDL_FRect, result: var SDL_FRect ): bool {.importc.}
+proc SDL_GetRectAndLineIntersectionFloat* ( rect: ptr SDL_FRect, X1,Y1,X2,Y2: var cfloat ): bool {.importc.}
 
 #endregion
 
@@ -4260,7 +4316,7 @@ when defined(SDL_PLATFORM_GDK):
 
 #region SDL3/SDL_thread.h -----------------------------------------------------
 
-# XXX
+# TODO: Do we want SDL's threads?
 
 #endregion
 
