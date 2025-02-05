@@ -442,9 +442,15 @@ proc SDL_WriteS64BE* ( dst: SDL_IOStream, value: int64 ): bool {.importc.}
 
 type
   SDL_AudioFormat* {.size: sizeof(cint).} = enum
-    SDL_AUDIO_UNKNOWN = 0x0000, SDL_AUDIO_U8 = 0x0008, SDL_AUDIO_S8 = 0x8008,
-    SDL_AUDIO_S16LE = 0x8010, SDL_AUDIO_S32LE = 0x8020, SDL_AUDIO_F32LE = 0x8120,
-    SDL_AUDIO_S16BE = 0x9010, SDL_AUDIO_S32BE = 0x9020, SDL_AUDIO_F32BE = 0x9120
+    SDL_AUDIO_UNKNOWN = 0x0000,
+    SDL_AUDIO_U8 = 0x0008,
+    SDL_AUDIO_S8 = 0x8008,
+    SDL_AUDIO_S16LE = 0x8010,
+    SDL_AUDIO_S32LE = 0x8020,
+    SDL_AUDIO_F32LE = 0x8120,
+    SDL_AUDIO_S16BE = 0x9010,
+    SDL_AUDIO_S32BE = 0x9020,
+    SDL_AUDIO_F32BE = 0x9120
 
 const
   SDL_AUDIO_S16* = SDL_AUDIO_S16LE
@@ -4003,7 +4009,7 @@ const SDL_BUTTON_MIDDLE* =   2
 const SDL_BUTTON_RIGHT* =    3
 const SDL_BUTTON_X1* =       4
 const SDL_BUTTON_X2* =       5
-proc SDL_BUTTON_MASK* (x: uint): uint = 1'u shl ((x)-1)
+template SDL_BUTTON_MASK* (x): untyped = 1 shl ((x)-1)
 const SDL_BUTTON_LMASK* =    SDL_BUTTON_MASK(SDL_BUTTON_LEFT)
 const SDL_BUTTON_MMASK* =    SDL_BUTTON_MASK(SDL_BUTTON_MIDDLE)
 const SDL_BUTTON_RMASK* =    SDL_BUTTON_MASK(SDL_BUTTON_RIGHT)
@@ -4014,9 +4020,9 @@ proc SDL_HasMouse* (): bool {.importc.}
 proc SDL_GetMice* ( count: var int ): ptr UncheckedArray[SDL_MouseID] {.importc.}
 proc SDL_GetMouseNameForID* ( instance_id: SDL_MouseID ): cstring {.importc.}
 proc SDL_GetMouseFocus* (): SDL_Window {.importc.}
-proc SDL_GetMouseState* ( x,y: var cfloat ): SDL_MouseButtonFlags {.importc.}
-proc SDL_GetGlobalMouseState* ( x,y: var cfloat ): SDL_MouseButtonFlags {.importc.}
-proc SDL_GetRelativeMouseState* ( x,y: var cfloat ): SDL_MouseButtonFlags {.importc.}
+proc SDL_GetMouseState* ( x,y: var cfloat ): uint32 {.importc.}
+proc SDL_GetGlobalMouseState* ( x,y: var cfloat ): uint32 {.importc.}
+proc SDL_GetRelativeMouseState* ( x,y: var cfloat ): uint32 {.importc.}
 proc SDL_WarpMouseInWindow* ( window: SDL_Window, x,y: cfloat ): void {.importc.}
 proc SDL_WarpMouseGlobal* ( x,y: cfloat ): bool {.importc.}
 proc SDL_SetWindowRelativeMouseMode* ( window: SDL_Window, enabled: bool ): bool {.importc, discardable.}
@@ -4385,7 +4391,7 @@ proc SDL_GetDayOfWeek* ( year, month, day: int ): int {.importc.}
 
 const SDL_MS_PER_SECOND* = 1000
 const SDL_US_PER_SECOND* = 1000000
-const SDL_NS_PER_SECOND* = 1000000000'i64
+const SDL_NS_PER_SECOND* = 1000000000
 const SDL_NS_PER_MS*     = 1000000
 const SDL_NS_PER_US*     = 1000
 
@@ -4593,7 +4599,7 @@ proc SDL_CloseCamera* ( camera: SDL_Camera ): void {.importc.}
 #region SDL3/SDL_events.h -----------------------------------------------------
 
 type
-  SDL_EventType* {.size: sizeof(cint).} = enum
+  SDL_EventType* {.size: sizeof(uint32).} = enum
     SDL_EVENT_FIRST = 0,
     SDL_EVENT_QUIT = 0x100,
     SDL_EVENT_TERMINATING,
