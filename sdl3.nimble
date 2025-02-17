@@ -1,5 +1,5 @@
 # Package
-version = "1.0.4"
+version = "1.1.4"
 author = "transmutrix"
 description = "Bindings for SDL3"
 license = "MIT"
