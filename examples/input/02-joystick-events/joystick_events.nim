@@ -144,7 +144,7 @@ while not quit:
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)
   SDL_RenderClear(renderer)
 
-  var winw, winh: int
+  var winw, winh: cint
   discard SDL_GetWindowSize(window, winw, winh)
 
   const msg_lifetime = 3500  # Milliseconds a message lives for.

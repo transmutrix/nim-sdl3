@@ -144,7 +144,7 @@ proc update(players: openarray[Player], dt_ns: uint64) =
 
 
 proc drawCircle(renderer: SDL_Renderer, r,x,y: float32) =
-  var points: array[CIRCLE_DRAW_SIDES_LEN, SDL_FPoint]
+  var points = default array[CIRCLE_DRAW_SIDES_LEN, SDL_FPoint]
   for i in 0..<CIRCLE_DRAW_SIDES_LEN:
     let ang = 2.0f * SDL_PI_F * i.float32 / CIRCLE_DRAW_SIDES
     points[i].x = x + r * SDL_cosf(ang)
@@ -190,7 +190,8 @@ proc drawClippedSegment(renderer: SDL_Renderer, ax,ay,az, bx,by,bz, x,y,z,w: flo
 var debug_string: string
 
 proc draw(renderer: SDL_Renderer, edges: openarray[array[6, float32]], players: openarray[Player]) =
-  var w,h: int
+  var w: cint = 0
+  var h: cint = 0
   if not SDL_GetRenderOutputSize(renderer, w, h):
     return
 

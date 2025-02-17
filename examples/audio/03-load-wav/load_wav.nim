@@ -72,9 +72,9 @@ while not quit:
   # We're being lazy here, but if there's less than the entire wav file left to play,
   # just shove a whole copy of it into the queue, so we always have _tons_ of
   # data queued for playback.
-  if SDL_GetAudioStreamAvailable(stream) < wavDataLen.int:
+  if SDL_GetAudioStreamAvailable(stream) < wavDataLen.cint:
     # Feed more data to the stream. It will queue at the end, and trickle out as the hardware needs more data.
-    discard SDL_PutAudioStreamData(stream, wavData, wavDataLen.int)
+    discard SDL_PutAudioStreamData(stream, wavData, wavDataLen.cint)
 
   # We're not doing anything with the renderer, so just blank it out.
   SDL_RenderClear(renderer);

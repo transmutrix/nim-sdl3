@@ -31,7 +31,7 @@ proc FeedTheAudioStreamMore* (userdata: pointer, astream: SDL_AudioStream, addit
       inc total_samples_generated
 
     # feed the new data to the stream. It will queue at the end, and trickle out as the hardware needs more data.
-    discard SDL_PutAudioStreamData(astream, samples.addr, total * sizeof(float32))
+    discard SDL_PutAudioStreamData(astream, samples.addr, cint total * sizeof(float32))
     nsamples -= total  # subtract what we've just fed the stream.
 
 

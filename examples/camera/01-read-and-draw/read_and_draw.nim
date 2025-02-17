@@ -31,7 +31,7 @@ if not SDL_CreateWindowAndRenderer("examples/camera/read-and-draw", 640, 480, 0,
     quit(QuitFailure)
 
 var
-  devcount: int
+  devcount: cint
   devices = SDL_GetCameras(devcount)
 
 if devices == nil:

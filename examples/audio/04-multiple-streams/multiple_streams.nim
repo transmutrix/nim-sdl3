@@ -19,6 +19,7 @@ var sounds: seq[Sound]
 
 proc initSound(fname: string): tuple[sound: Sound, ok: bool] =
   # Load the .wav files from wherever the app is being run from.
+  result = (Sound(), false)
   let wavPath = &"{os.getCurrentDir()}/test/{fname}"
   var spec: SDL_AudioSpec
   if not SDL_LoadWAV(wavPath.cstring, spec.addr, result.sound.wavData, result.sound.wavDataLen):
@@ -94,8 +95,8 @@ while not quit:
     # If less than a full copy of the audio is queued for playback, put another copy in there.
     # This is overkill, but easy when lots of RAM is cheap. One could be more careful and
     # queue less at a time, as long as the stream doesn't run dry.
-    if SDL_GetAudioStreamAvailable(sounds[i].stream) < sounds[i].wavDataLen.int:
-      discard SDL_PutAudioStreamData(sounds[i].stream, sounds[i].wavData, sounds[i].wavDataLen.int)
+    if SDL_GetAudioStreamAvailable(sounds[i].stream) < sounds[i].wavDataLen.cint:
+      discard SDL_PutAudioStreamData(sounds[i].stream, sounds[i].wavData, sounds[i].wavDataLen.cint)
 
   # Just blank the screen.
   SDL_RenderClear(renderer)

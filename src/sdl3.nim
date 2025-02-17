@@ -4,7 +4,6 @@
 # NOTE: Opaque pointer types like SDL_Texture are defined as `pointer`, since
 #  these are never, ever dereferenced. This lowers syntax noise.
 
-import std/strutils
 import std/bitops
 
 {.push warning[user]: off}
@@ -42,14 +41,14 @@ const SDL_REVISION* = "SDL3-3.1.8-HEAD-HASH-NOTFOUND"
 const SDL_MAJOR_VERSION* =    3
 const SDL_MINOR_VERSION* =    2
 const SDL_MICRO_VERSION* =    0
-template SDL_VERSIONNUM* (major, minor, patch): int = ((major)*1000000 + (minor)*1000 + (patch))
-template SDL_VERSIONNUM_MAJOR* (version): int = ((version) / 1000000)
-template SDL_VERSIONNUM_MINOR* (version): int = (((version) / 1000) mod 1000)
-template SDL_VERSIONNUM_MICRO* (version): int = ((version) mod 1000)
+template SDL_VERSIONNUM* (major, minor, patch): cint = ((major)*1000000 + (minor)*1000 + (patch))
+template SDL_VERSIONNUM_MAJOR* (version): cint = ((version) / 1000000)
+template SDL_VERSIONNUM_MINOR* (version): cint = (((version) / 1000) mod 1000)
+template SDL_VERSIONNUM_MICRO* (version): cint = ((version) mod 1000)
 const SDL_VERSION* =  SDL_VERSIONNUM(SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION)
 template SDL_VERSION_ATLEAST* (X, Y, Z): bool = SDL_VERSION >= SDL_VERSIONNUM(X, Y, Z)
 
-proc SDL_GetVersion* (): int {.importc.}
+proc SDL_GetVersion* (): cint {.importc.}
 proc SDL_GetRevision* (): cstring {.importc.}
 
 #endregion
@@ -79,7 +78,7 @@ proc SDL_SetMemoryFunctions* ( malloc_func: SDL_malloc_func, calloc_func: SDL_ca
 proc SDL_aligned_alloc* ( alignment: csize_t, size: csize_t ): pointer {.importc.}
 proc SDL_aligned_free* ( mem: pointer ): void {.importc.}
 
-proc SDL_GetNumAllocations* (): int {.importc.}
+proc SDL_GetNumAllocations* (): cint {.importc.}
 
 type
   SDL_Environment* = pointer
@@ -94,8 +93,8 @@ proc SDL_DestroyEnvironment* ( env: SDL_Environment ): void {.importc.}
 
 proc SDL_getenv* ( name: cstring ): string {.importc.}
 proc SDL_getenv_unsafe* ( name: cstring ): cstring {.importc.}
-proc SDL_setenv_unsafe* ( name,value: cstring, overwrite: int ): int {.importc.}
-proc SDL_unsetenv_unsafe* ( name: cstring ): int {.importc.}
+proc SDL_setenv_unsafe* ( name,value: cstring, overwrite: cint ): cint {.importc.}
+proc SDL_unsetenv_unsafe* ( name: cstring ): cint {.importc.}
 
 type
   SDL_CompareCallback* = proc (a,b: pointer): cint {.cdecl.}
@@ -113,21 +112,21 @@ template SDL_min* (x, y): untyped = (if (x) < (y): (x) else: (y))
 template SDL_max* (x, y): untyped = (if (x) > (y): (x) else: (y))
 template SDL_clamp* (x, a, b): untyped = (if (x) < (a): (a) else: (if (x) > (b): (b) else: (x)))
 
-proc SDL_isalpha* ( x: int ): bool {.importc.}
-proc SDL_isalnum* ( x: int ): bool {.importc.}
-proc SDL_isblank* ( x: int ): bool {.importc.}
-proc SDL_iscntrl* ( x: int ): bool {.importc.}
-proc SDL_isdigit* ( x: int ): bool {.importc.}
-proc SDL_isxdigit* ( x: int ): bool {.importc.}
-proc SDL_ispunct* ( x: int ): bool {.importc.}
-proc SDL_isspace* ( x: int ): bool {.importc.}
-proc SDL_isupper* ( x: int ): bool {.importc.}
-proc SDL_islower* ( x: int ): bool {.importc.}
-proc SDL_isprint* ( x: int ): bool {.importc.}
-proc SDL_isgraph* ( x: int ): bool {.importc.}
+proc SDL_isalpha* ( x: cint ): bool {.importc.}
+proc SDL_isalnum* ( x: cint ): bool {.importc.}
+proc SDL_isblank* ( x: cint ): bool {.importc.}
+proc SDL_iscntrl* ( x: cint ): bool {.importc.}
+proc SDL_isdigit* ( x: cint ): bool {.importc.}
+proc SDL_isxdigit* ( x: cint ): bool {.importc.}
+proc SDL_ispunct* ( x: cint ): bool {.importc.}
+proc SDL_isspace* ( x: cint ): bool {.importc.}
+proc SDL_isupper* ( x: cint ): bool {.importc.}
+proc SDL_islower* ( x: cint ): bool {.importc.}
+proc SDL_isprint* ( x: cint ): bool {.importc.}
+proc SDL_isgraph* ( x: cint ): bool {.importc.}
 
-proc SDL_toupper* ( x: int ): int {.importc.}
-proc SDL_tolower* ( x: int ): int {.importc.}
+proc SDL_toupper* ( x: cint ): cint {.importc.}
+proc SDL_tolower* ( x: cint ): cint {.importc.}
 
 proc SDL_crc16* ( crc: uint16, data: pointer, len: csize_t ): uint16 {.importc.}
 proc SDL_crc32* ( crc: uint32, data: pointer, len: csize_t ): uint32 {.importc.}
@@ -145,7 +144,7 @@ proc SDL_rand_bits_r* ( state: var uint64 ): uint32 {.importc.}
 const SDL_PI_D* = 3.141592653589793238462643383279502884'f64  # pi (double)
 const SDL_PI_F* = 3.141592653589793238462643383279502884'f32  # pi (float)
 
-proc SDL_abs* ( x: int ): bool {.importc.}
+proc SDL_abs* ( x: cint ): bool {.importc.}
 proc SDL_acos* ( x: cdouble ): cdouble {.importc.}
 proc SDL_acosf* ( x: cfloat ): cfloat {.importc.}
 proc SDL_asin* ( x: cdouble ): cdouble {.importc.}
@@ -170,10 +169,10 @@ proc SDL_trunc* ( x: cdouble ): cdouble {.importc.}
 proc SDL_truncf* ( x: cfloat ): cfloat {.importc.}
 proc SDL_fmod* ( x: cdouble, y: cdouble ): cdouble {.importc.}
 proc SDL_fmodf* ( x,y: cfloat ): cfloat {.importc.}
-proc SDL_isinf* ( x: cdouble ): int {.importc.}
-proc SDL_isinff* ( x: cfloat ): int {.importc.}
-proc SDL_isnan* ( x: cdouble ): int {.importc.}
-proc SDL_isnanf* ( x: cfloat ): int {.importc.}
+proc SDL_isinf* ( x: cdouble ): cint {.importc.}
+proc SDL_isinff* ( x: cfloat ): cint {.importc.}
+proc SDL_isnan* ( x: cdouble ): cint {.importc.}
+proc SDL_isnanf* ( x: cfloat ): cint {.importc.}
 proc SDL_log* ( x: cdouble ): cdouble {.importc.}
 proc SDL_logf* ( x: cfloat ): cfloat {.importc.}
 proc SDL_log10* ( x: cdouble ): cdouble {.importc.}
@@ -186,8 +185,8 @@ proc SDL_round* ( x: cdouble ): cdouble {.importc.}
 proc SDL_roundf* ( x: cfloat ): cfloat {.importc.}
 proc SDL_lround* ( x: cdouble ): clong {.importc.}
 proc SDL_lroundf* ( x: cfloat ): clong {.importc.}
-proc SDL_scalbn* ( x: cdouble, n: int ): cdouble {.importc.}
-proc SDL_scalbnf* ( x: cfloat, n: int ): cfloat {.importc.}
+proc SDL_scalbn* ( x: cdouble, n: cint ): cdouble {.importc.}
+proc SDL_scalbnf* ( x: cfloat, n: cint ): cfloat {.importc.}
 proc SDL_sin* ( x: cdouble ): cdouble {.importc.}
 proc SDL_sinf* ( x: cfloat ): cfloat {.importc.}
 proc SDL_sqrt* ( x: cdouble ): cdouble {.importc.}
@@ -274,10 +273,10 @@ proc SDL_MemoryBarrierAcquireFunction* (): void {.importc.}
 type SDL_AtomicInt* {.bycopy.} = object
   value*: cint
 
-proc SDL_CompareAndSwapAtomicInt* ( a: var SDL_AtomicInt, oldval,newval: int ): bool {.importc.}
-proc SDL_SetAtomicInt* ( a: var SDL_AtomicInt, v: int ): int {.importc.}
-proc SDL_GetAtomicInt* ( a: var SDL_AtomicInt ): int {.importc.}
-proc SDL_AddAtomicInt* ( a: var SDL_AtomicInt, v: int ): int {.importc.}
+proc SDL_CompareAndSwapAtomicInt* ( a: var SDL_AtomicInt, oldval,newval: cint ): bool {.importc.}
+proc SDL_SetAtomicInt* ( a: var SDL_AtomicInt, v: cint ): cint {.importc.}
+proc SDL_GetAtomicInt* ( a: var SDL_AtomicInt ): cint {.importc.}
+proc SDL_AddAtomicInt* ( a: var SDL_AtomicInt, v: cint ): cint {.importc.}
 
 type SDL_AtomicU32* {.bycopy.} = object
   value*: uint32
@@ -467,14 +466,14 @@ type
 const SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK* = 0xFFFFFFFF'u32.SDL_AudioDeviceID
 const SDL_AUDIO_DEVICE_DEFAULT_RECORDING* = 0xFFFFFFFE'u32.SDL_AudioDeviceID
 
-proc SDL_GetNumAudioDrivers* (): int {.importc.}
-proc SDL_GetAudioDriver* ( index: int ): cstring {.importc.}
+proc SDL_GetNumAudioDrivers* (): cint {.importc.}
+proc SDL_GetAudioDriver* ( index: cint ): cstring {.importc.}
 proc SDL_GetCurrentAudioDriver* (): cstring {.importc.}
-proc SDL_GetAudioPlaybackDevices* ( count: var int ): var UncheckedArray[SDL_AudioDeviceID] {.importc.}
-proc SDL_GetAudioRecordingDevices* ( count: var int ): var UncheckedArray[SDL_AudioDeviceID] {.importc.}
+proc SDL_GetAudioPlaybackDevices* ( count: var cint ): var UncheckedArray[SDL_AudioDeviceID] {.importc.}
+proc SDL_GetAudioRecordingDevices* ( count: var cint ): var UncheckedArray[SDL_AudioDeviceID] {.importc.}
 proc SDL_GetAudioDeviceName* ( devid: SDL_AudioDeviceID ): cstring {.importc.}
 proc SDL_GetAudioDeviceFormat* ( devid: SDL_AudioDeviceID, spec: ptr SDL_AudioSpec, sample_frames: ptr cint ): bool {.importc.}
-proc SDL_GetAudioDeviceChannelMap* ( devid: SDL_AudioDeviceID, count: var int ): var UncheckedArray[int] {.importc.}
+proc SDL_GetAudioDeviceChannelMap* ( devid: SDL_AudioDeviceID, count: var cint ): var UncheckedArray[cint] {.importc.}
 proc SDL_OpenAudioDevice* ( devid: SDL_AudioDeviceID, spec: ptr SDL_AudioSpec ): SDL_AudioDeviceID {.importc.}
 proc SDL_IsAudioDevicePhysical* ( devid: SDL_AudioDeviceID ): bool {.importc.}
 proc SDL_IsAudioDevicePlayback* ( devid: SDL_AudioDeviceID ): bool {.importc.}
@@ -487,10 +486,10 @@ proc SDL_CloseAudioDevice* ( devid: SDL_AudioDeviceID): void {.importc.}
 
 type SDL_AudioStream* = pointer
 
-proc SDL_BindAudioStreams* ( devid: SDL_AudioDeviceID, streams: ptr[SDL_AudioStream], num_streams: int ): bool {.importc.}
+proc SDL_BindAudioStreams* ( devid: SDL_AudioDeviceID, streams: ptr[SDL_AudioStream], num_streams: cint ): bool {.importc.}
 proc SDL_BindAudioStreams* ( devid: SDL_AudioDeviceID, streams: openarray[SDL_AudioStream] ): bool {.importc.}
 proc SDL_BindAudioStream* ( devid: SDL_AudioDeviceID, stream: SDL_AudioStream ): bool {.importc.}
-proc SDL_UnbindAudioStreams* ( streams: ptr[SDL_AudioStream], num_streams: int ): void {.importc.}
+proc SDL_UnbindAudioStreams* ( streams: ptr[SDL_AudioStream], num_streams: cint ): void {.importc.}
 proc SDL_UnbindAudioStreams* ( streams: openarray[SDL_AudioStream] ): void {.importc.}
 proc SDL_UnbindAudioStream* ( stream: SDL_AudioStream ): void {.importc.}
 proc SDL_GetAudioStreamDevice* ( stream: SDL_AudioStream ): SDL_AudioDeviceID {.importc.}
@@ -502,14 +501,14 @@ proc SDL_GetAudioStreamFrequencyRatio* ( stream: SDL_AudioStream ): cfloat {.imp
 proc SDL_SetAudioStreamFrequencyRatio* ( stream: SDL_AudioStream, ratio: cfloat ): bool {.importc.}
 proc SDL_GetAudioStreamGain* ( stream: SDL_AudioStream ): cfloat {.importc.}
 proc SDL_SetAudioStreamGain* ( stream: SDL_AudioStream, gain: cfloat ): bool {.importc.}
-proc SDL_GetAudioStreamInputChannelMap* ( stream: SDL_AudioStream, count: var int ): ptr[int] {.importc.}
-proc SDL_GetAudioStreamOutputChannelMap* ( stream: SDL_AudioStream, count: var int ): ptr[int] {.importc.}
-proc SDL_SetAudioStreamInputChannelMap* ( stream: SDL_AudioStream, chmap: openarray[int] ): bool {.importc.}
-proc SDL_SetAudioStreamOutputChannelMap* ( stream: SDL_AudioStream, chmap: openarray[int] ): bool {.importc.}
-proc SDL_PutAudioStreamData* ( stream: SDL_AudioStream, buf: pointer, len: int ): bool {.importc.}
-proc SDL_GetAudioStreamData* ( stream: SDL_AudioStream, buf: pointer, len: int ): int {.importc.}
-proc SDL_GetAudioStreamAvailable* ( stream: SDL_AudioStream ): int {.importc.}
-proc SDL_GetAudioStreamQueued* ( stream: SDL_AudioStream ): int {.importc.}
+proc SDL_GetAudioStreamInputChannelMap* ( stream: SDL_AudioStream, count: var cint ): ptr[cint] {.importc.}
+proc SDL_GetAudioStreamOutputChannelMap* ( stream: SDL_AudioStream, count: var cint ): ptr[cint] {.importc.}
+proc SDL_SetAudioStreamInputChannelMap* ( stream: SDL_AudioStream, chmap: openarray[cint] ): bool {.importc.}
+proc SDL_SetAudioStreamOutputChannelMap* ( stream: SDL_AudioStream, chmap: openarray[cint] ): bool {.importc.}
+proc SDL_PutAudioStreamData* ( stream: SDL_AudioStream, buf: pointer, len: cint ): bool {.importc.}
+proc SDL_GetAudioStreamData* ( stream: SDL_AudioStream, buf: pointer, len: cint ): cint {.importc.}
+proc SDL_GetAudioStreamAvailable* ( stream: SDL_AudioStream ): cint {.importc.}
+proc SDL_GetAudioStreamQueued* ( stream: SDL_AudioStream ): cint {.importc.}
 proc SDL_FlushAudioStream* ( stream: SDL_AudioStream ): bool {.importc.}
 proc SDL_ClearAudioStream* ( stream: SDL_AudioStream ): bool {.importc.}
 proc SDL_PauseAudioStreamDevice* ( stream: SDL_AudioStream ): bool {.importc.}
@@ -533,16 +532,16 @@ proc SDL_SetAudioPostmixCallback* ( devid: SDL_AudioDeviceID, callback: SDL_Audi
 proc SDL_LoadWAV_IO* ( src: SDL_IOStream, closeio: bool, spec: ptr SDL_AudioSpec, audio_buf: var UncheckedArray[uint8], audio_len: var uint32 ): bool {.importc.}
 proc SDL_LoadWAV* ( path: cstring, spec: ptr SDL_AudioSpec, audio_buf: var ptr[uint8], audio_len: var uint32 ): bool {.importc.}
 proc SDL_MixAudio* ( dst,src: ptr [uint8], format: SDL_AudioFormat, len: uint32, volume: cfloat ): bool {.importc.}
-proc SDL_ConvertAudioSamples* ( src_spec: ptr SDL_AudioSpec, src_data: ptr[uint8], src_len: int, dst_spec: ptr SDL_AudioSpec, dst_data: var ptr[uint8], dst_len: var int ): bool {.importc.}
+proc SDL_ConvertAudioSamples* ( src_spec: ptr SDL_AudioSpec, src_data: ptr[uint8], src_len: cint, dst_spec: ptr SDL_AudioSpec, dst_data: var ptr[uint8], dst_len: var cint ): bool {.importc.}
 proc SDL_GetAudioFormatName* ( format: SDL_AudioFormat ): cstring {.importc.}
-proc SDL_GetSilenceValueForFormat* ( format: SDL_AudioFormat ): int {.importc.}
+proc SDL_GetSilenceValueForFormat* ( format: SDL_AudioFormat ): cint {.importc.}
 
 #endregion
 
 
 #region SDL3/SDL_bits.h -------------------------------------------------------
 
-template SDL_MostSignificantBitIndex32* ( x: uint32 ): int =
+template SDL_MostSignificantBitIndex32* ( x: uint32 ): cint =
   # Based off of Bit Twiddling Hacks by Sean Eron Anderson
   # <seander@cs.stanford.edu>, released in the public domain.
   # http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog
@@ -550,7 +549,7 @@ template SDL_MostSignificantBitIndex32* ( x: uint32 ): int =
   const S = [ 1, 2, 4, 8, 16 ]
   var
     x = x
-    msbIndex: int
+    msbIndex: cint
   if x == 0:
     return -1
   for i in countdown(4, 0):
@@ -873,11 +872,11 @@ type
     Ashift*: uint8
 
 proc SDL_GetPixelFormatName* ( format: SDL_PixelFormat ): cstring {.importc.}
-proc SDL_GetMasksForPixelFormat* ( format: SDL_PixelFormat, bpp: var int, Rmask: var uint32, Gmask: var uint32, Bmask: var uint32, Amask: var uint32 ): bool {.importc.}
-proc SDL_GetPixelFormatForMasks* ( bpp: int, Rmask: uint32, Gmask: uint32, Bmask: uint32, Amask: uint32 ): SDL_PixelFormat {.importc.}
+proc SDL_GetMasksForPixelFormat* ( format: SDL_PixelFormat, bpp: var cint, Rmask: var uint32, Gmask: var uint32, Bmask: var uint32, Amask: var uint32 ): bool {.importc.}
+proc SDL_GetPixelFormatForMasks* ( bpp: cint, Rmask: uint32, Gmask: uint32, Bmask: uint32, Amask: uint32 ): SDL_PixelFormat {.importc.}
 proc SDL_GetPixelFormatDetails* ( format: SDL_PixelFormat ): ptr SDL_PixelFormatDetails {.importc.}
-proc SDL_CreatePalette* ( ncolors: int ): ptr SDL_Palette {.importc.}
-proc SDL_SetPaletteColors* ( palette: ptr SDL_Palette, colors: ptr[SDL_Color], firstcolor,ncolors: int ): bool {.importc.}
+proc SDL_CreatePalette* ( ncolors: cint ): ptr SDL_Palette {.importc.}
+proc SDL_SetPaletteColors* ( palette: ptr SDL_Palette, colors: ptr[SDL_Color], firstcolor,ncolors: cint ): bool {.importc.}
 proc SDL_DestroyPalette* ( palette: ptr SDL_Palette ): void {.importc.}
 proc SDL_MapRGB* ( format: ptr SDL_PixelFormatDetails, palette: ptr SDL_Palette, r,g,b: uint8 ): uint32 {.importc.}
 proc SDL_MapRGBA* ( format: ptr SDL_PixelFormatDetails, palette: ptr SDL_Palette, r,g,b,a: uint8 ): uint32 {.importc.}
@@ -917,8 +916,8 @@ proc SDL_GetClipboardMimeTypes* ( num_mime_types: var csize_t ): var UncheckedAr
 
 const SDL_CACHELINE_SIZE* = 128
 
-proc SDL_GetNumLogicalCPUCores* (): int {.importc.}
-proc SDL_GetCPUCacheLineSize* (): int {.importc.}
+proc SDL_GetNumLogicalCPUCores* (): cint {.importc.}
+proc SDL_GetCPUCacheLineSize* (): cint {.importc.}
 proc SDL_HasAltiVec* (): bool {.importc.}
 proc SDL_HasMMX* (): bool {.importc.}
 proc SDL_HasSSE* (): bool {.importc.}
@@ -933,7 +932,7 @@ proc SDL_HasARMSIMD* (): bool {.importc.}
 proc SDL_HasNEON* (): bool {.importc.}
 proc SDL_HasLSX* (): bool {.importc.}
 proc SDL_HasLASX* (): bool {.importc.}
-proc SDL_GetSystemRAM* (): int {.importc.}
+proc SDL_GetSystemRAM* (): cint {.importc.}
 proc SDL_GetSIMDAlignment* (): csize_t {.importc.}
 
 #endregion
@@ -1019,7 +1018,7 @@ proc SDL_RemovePath* ( path: cstring ): bool {.importc.}
 proc SDL_RenamePath* ( oldpath,newpath: cstring ): bool {.importc.}
 proc SDL_CopyFile* ( oldpath,newpath: cstring ): bool {.importc.}
 proc SDL_GetPathInfo* ( path: cstring, info: var SDL_PathInfo ): bool {.importc.}
-proc SDL_GlobDirectory* ( path,pattern: cstring, flags: SDL_GlobFlags, count: var int ): ptr UncheckedArray[cstring] {.importc.}
+proc SDL_GlobDirectory* ( path,pattern: cstring, flags: SDL_GlobFlags, count: var cint ): ptr UncheckedArray[cstring] {.importc.}
 proc SDL_GetCurrentDirectory* (): cstring {.importc.}
 
 #endregion
@@ -1081,7 +1080,7 @@ func SDL_HasRectIntersection* ( A,B: ptr SDL_Rect ): bool {.importc.}
 proc SDL_GetRectIntersection* ( A,B: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.}
 proc SDL_GetRectUnion* ( A,B: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.}
 proc SDL_GetRectEnclosingPoints* ( points: openarray[SDL_Point], clip: ptr SDL_Rect, result: var SDL_Rect ): bool {.importc.}
-proc SDL_GetRectAndLineIntersection* ( rect: ptr SDL_Rect, X1,Y1,X2,Y2: var int ): bool {.importc.}
+proc SDL_GetRectAndLineIntersection* ( rect: ptr SDL_Rect, X1,Y1,X2,Y2: var cint ): bool {.importc.}
 
 proc SDL_PointInRectFloat* ( p: ptr SDL_FPoint, r: ptr SDL_FRect ): bool {.inline.} =
   ## Note that this follows a different logic to SDL_PointInRect, as this proc
@@ -1137,8 +1136,8 @@ type
     refcount*: cint
     reserved*: pointer
 
-proc SDL_CreateSurface* ( width,height: int, format: SDL_PixelFormat ): ptr SDL_Surface {.importc.}
-proc SDL_CreateSurfaceFrom* ( width,height: int, format: SDL_PixelFormat, pixels: pointer, pitch: int): ptr SDL_Surface {.importc.}
+proc SDL_CreateSurface* ( width,height: cint, format: SDL_PixelFormat ): ptr SDL_Surface {.importc.}
+proc SDL_CreateSurfaceFrom* ( width,height: cint, format: SDL_PixelFormat, pixels: pointer, pitch: cint): ptr SDL_Surface {.importc.}
 proc SDL_DestroySurface* ( surface: ptr SDL_Surface ): void {.importc.}
 proc SDL_GetSurfaceProperties* ( surface: ptr SDL_Surface ): SDL_PropertiesID {.importc.}
 proc SDL_SetSurfaceColorspace* ( surface: ptr SDL_Surface, colorspace: SDL_Colorspace ): bool {.importc.}
@@ -1148,7 +1147,7 @@ proc SDL_SetSurfacePalette* ( surface: ptr SDL_Surface, palette: ptr SDL_Palette
 proc SDL_GetSurfacePalette* ( surface: ptr SDL_Surface ): ptr SDL_Palette {.importc.}
 proc SDL_AddSurfaceAlternateImage* ( surface: ptr SDL_Surface, image: ptr SDL_Surface ): bool {.importc.}
 proc SDL_SurfaceHasAlternateImages* ( surface: ptr SDL_Surface ): bool {.importc.}
-proc SDL_GetSurfaceImages* ( surface: ptr SDL_Surface, count: var int ): ptr UncheckedArray[ptr SDL_Surface] {.importc.}
+proc SDL_GetSurfaceImages* ( surface: ptr SDL_Surface, count: var cint ): ptr UncheckedArray[ptr SDL_Surface] {.importc.}
 proc SDL_RemoveSurfaceAlternateImages* ( surface: ptr SDL_Surface ): void {.importc.}
 proc SDL_LockSurface* ( surface: ptr SDL_Surface ): bool {.importc}
 proc SDL_UnlockSurface* ( surface: ptr SDL_Surface ): void {.importc.}
@@ -1171,12 +1170,12 @@ proc SDL_SetSurfaceClipRect* ( surface: ptr SDL_Surface, rect: ptr SDL_Rect ): b
 proc SDL_GetSurfaceClipRect* ( surface: ptr SDL_Surface, rect: var SDL_Rect ): bool {.importc.}
 proc SDL_FlipSurface* ( surface: ptr SDL_Surface, flip: SDL_FlipMode ): bool {.importc.}
 proc SDL_DuplicateSurface* ( surface: ptr SDL_Surface ): ptr SDL_Surface {.importc.}
-proc SDL_ScaleSurface* ( surface: ptr SDL_Surface, width,height: int, scaleMode: SDL_ScaleMode ): ptr SDL_Surface {.importc.}
+proc SDL_ScaleSurface* ( surface: ptr SDL_Surface, width,height: cint, scaleMode: SDL_ScaleMode ): ptr SDL_Surface {.importc.}
 proc SDL_ConvertSurface* ( surface: ptr SDL_Surface, format: SDL_PixelFormat ): ptr SDL_Surface {.importc.}
 proc SDL_ConvertSurfaceAndColorspace* ( surface: ptr SDL_Surface, format: SDL_PixelFormat, palette: ptr SDL_Palette, colorspace: SDL_Colorspace, props: SDL_PropertiesID): ptr SDL_Surface {.importc.}
-proc SDL_ConvertPixels* ( width,height: int, src_format: SDL_PixelFormat, src: pointer, src_pitch: int, dst_format: SDL_PixelFormat, dst: pointer, dst_pitch: int ): bool {.importc.}
-proc SDL_ConvertPixelsAndColorspace* ( width,height: int, src_format: SDL_PixelFormat, src_colorspace: SDL_Colorspace, src_properties: SDL_PropertiesID, src: pointer, src_pitch: int, dst_format: SDL_PixelFormat, dst_colorspace: SDL_Colorspace, dst_properties: SDL_PropertiesID, dst: pointer, dst_pitch: int ): bool {.importc.}
-proc SDL_PremultiplyAlpha* ( width,height: int, src_format: SDL_PixelFormat, src: pointer, src_pitch: int, dst_format: SDL_PixelFormat, dst: pointer, dst_pitch: int, linear: bool ): bool {.importc.}
+proc SDL_ConvertPixels* ( width,height: cint, src_format: SDL_PixelFormat, src: pointer, src_pitch: cint, dst_format: SDL_PixelFormat, dst: pointer, dst_pitch: cint ): bool {.importc.}
+proc SDL_ConvertPixelsAndColorspace* ( width,height: cint, src_format: SDL_PixelFormat, src_colorspace: SDL_Colorspace, src_properties: SDL_PropertiesID, src: pointer, src_pitch: cint, dst_format: SDL_PixelFormat, dst_colorspace: SDL_Colorspace, dst_properties: SDL_PropertiesID, dst: pointer, dst_pitch: cint ): bool {.importc.}
+proc SDL_PremultiplyAlpha* ( width,height: cint, src_format: SDL_PixelFormat, src: pointer, src_pitch: cint, dst_format: SDL_PixelFormat, dst: pointer, dst_pitch: cint, linear: bool ): bool {.importc.}
 proc SDL_PremultiplySurfaceAlpha* ( surface: ptr SDL_Surface, linear: bool ): bool {.importc.}
 proc SDL_ClearSurface* ( surface: ptr SDL_Surface, r,g,b,a: cfloat ): bool {.importc.}
 proc SDL_FillSurfaceRect* ( dst: ptr SDL_Surface, rect: ptr SDL_Rect, color: uint32 ): bool {.importc.}
@@ -1187,13 +1186,13 @@ proc SDL_BlitSurfaceScaled* ( src: ptr SDL_Surface, srcrect: ptr SDL_Rect, dst: 
 proc SDL_BlitSurfaceUncheckedScaled* ( src: ptr SDL_Surface, srcrect: ptr SDL_Rect, dst: ptr SDL_Surface, dstrect: ptr SDL_Rect, scaleMode: SDL_ScaleMode ): bool {.importc.}
 proc SDL_BlitSurfaceTiled* ( src: ptr SDL_Surface, srcrect: ptr SDL_Rect, dst: ptr SDL_Surface, dstrect: ptr SDL_Rect): bool {.importc.}
 proc SDL_BlitSurfaceTiledWithScale* ( src: ptr SDL_Surface, srcrect: ptr SDL_Rect, scale: cfloat, scaleMode: SDL_ScaleMode, dst: ptr SDL_Surface, dstrect: ptr SDL_Rect ): bool {.importc.}
-proc SDL_BlitSurface9Grid* ( src: ptr SDL_Surface, srcrect: ptr SDL_Rect, left_width,right_width,top_height,bottom_height: int, scale: cfloat, scaleMode: SDL_ScaleMode, dst: ptr SDL_Surface, dstrect: ptr SDL_Rect ): bool {.importc.}
+proc SDL_BlitSurface9Grid* ( src: ptr SDL_Surface, srcrect: ptr SDL_Rect, left_width,right_width,top_height,bottom_height: cint, scale: cfloat, scaleMode: SDL_ScaleMode, dst: ptr SDL_Surface, dstrect: ptr SDL_Rect ): bool {.importc.}
 proc SDL_MapSurfaceRGB* ( surface: ptr SDL_Surface, r,g,b: uint8 ): uint32 {.importc.}
 proc SDL_MapSurfaceRGBA* ( surface: ptr SDL_Surface, r,g,b,a: uint8 ): uint32 {.importc.}
-proc SDL_ReadSurfacePixel* ( surface: ptr SDL_Surface, x,y: int, r,g,b,a: var uint8 ): bool {.importc.}
-proc SDL_ReadSurfacePixelFloat* ( surface: ptr SDL_Surface, x,y: int, r,g,b,a: var cfloat ): bool {.importc.}
-proc SDL_WriteSurfacePixel* ( surface: ptr SDL_Surface, x,y: int, r,g,b,a: uint8 ): bool {.importc.}
-proc SDL_WriteSurfacePixelFloat* ( surface: ptr SDL_Surface, x,y: int, r,g,b,a: cfloat ): bool {.importc.}
+proc SDL_ReadSurfacePixel* ( surface: ptr SDL_Surface, x,y: cint, r,g,b,a: var uint8 ): bool {.importc.}
+proc SDL_ReadSurfacePixelFloat* ( surface: ptr SDL_Surface, x,y: cint, r,g,b,a: var cfloat ): bool {.importc.}
+proc SDL_WriteSurfacePixel* ( surface: ptr SDL_Surface, x,y: cint, r,g,b,a: uint8 ): bool {.importc.}
+proc SDL_WriteSurfacePixelFloat* ( surface: ptr SDL_Surface, x,y: cint, r,g,b,a: cfloat ): bool {.importc.}
 
 const SDL_SURFACE_PREALLOCATED* = 0x00000001'u #  Surface uses preallocated pixel memory
 const SDL_SURFACE_LOCK_NEEDED*  = 0x00000002'u #  Surface needs to be locked to access pixels
@@ -1323,11 +1322,11 @@ type
   SDL_GLContextReleaseFlag* = uint32
   # SDL_GLContextResetNotification* = uint32
 
-proc SDL_GetNumVideoDrivers* (): int {.importc.}
-proc SDL_GetVideoDriver* ( index: int ): cstring {.importc.}
+proc SDL_GetNumVideoDrivers* (): cint {.importc.}
+proc SDL_GetVideoDriver* ( index: cint ): cstring {.importc.}
 proc SDL_GetCurrentVideoDriver* (): cstring {.importc.}
 proc SDL_GetSystemTheme* (): SDL_SystemTheme {.importc.}
-proc SDL_GetDisplays* ( count: var int ): ptr UncheckedArray[SDL_DisplayID] {.importc.}
+proc SDL_GetDisplays* ( count: var cint ): ptr UncheckedArray[SDL_DisplayID] {.importc.}
 proc SDL_GetPrimaryDisplay* (): SDL_DisplayID {.importc.}
 proc SDL_GetDisplayProperties* ( displayID: SDL_DisplayID ): SDL_PropertiesID {.importc.}
 proc SDL_GetDisplayName* ( displayID: SDL_DisplayID ): cstring {.importc.}
@@ -1336,8 +1335,8 @@ proc SDL_GetDisplayUsableBounds* ( displayID: SDL_DisplayID, rect: var SDL_Rect 
 proc SDL_GetNaturalDisplayOrientation* ( displayID: SDL_DisplayID ): SDL_DisplayOrientation {.importc.}
 proc SDL_GetCurrentDisplayOrientation* ( displayID: SDL_DisplayID ): SDL_DisplayOrientation {.importc.}
 proc SDL_GetDisplayContentScale* ( displayID: SDL_DisplayID ): cfloat {.importc.}
-proc SDL_GetFullscreenDisplayModes* ( displayID: SDL_DisplayID, count: var int ): ptr UncheckedArray[ptr SDL_DisplayMode] {.importc.}
-proc SDL_GetClosestFullscreenDisplayMode* ( displayID: SDL_DisplayID, w,h: int, refresh_rate: cfloat, include_high_density_modes: bool, closest: var SDL_DisplayMode ): bool {.importc.}
+proc SDL_GetFullscreenDisplayModes* ( displayID: SDL_DisplayID, count: var cint ): ptr UncheckedArray[ptr SDL_DisplayMode] {.importc.}
+proc SDL_GetClosestFullscreenDisplayMode* ( displayID: SDL_DisplayID, w,h: cint, refresh_rate: cfloat, include_high_density_modes: bool, closest: var SDL_DisplayMode ): bool {.importc.}
 proc SDL_GetDesktopDisplayMode* ( displayID: SDL_DisplayID ): ptr SDL_DisplayMode {.importc.}
 proc SDL_GetCurrentDisplayMode* ( displayID: SDL_DisplayID ): ptr SDL_DisplayMode {.importc.}
 proc SDL_GetDisplayForPoint* ( point: ptr SDL_Point ): SDL_DisplayID {.importc.}
@@ -1350,9 +1349,9 @@ proc SDL_SetWindowFullscreenMode* ( window: SDL_Window, mode: ptr SDL_DisplayMod
 proc SDL_GetWindowFullscreenMode* ( window: SDL_Window ): ptr SDL_DisplayMode {.importc.}
 proc SDL_GetWindowICCProfile* ( window: SDL_Window, size: var csize_t ): pointer {.importc.}
 proc SDL_GetWindowPixelFormat* ( window: SDL_Window ): SDL_PixelFormat {.importc.}
-proc SDL_GetWindows* ( count: var int ): ptr UncheckedArray[SDL_Window] {.importc.}
+proc SDL_GetWindows* ( count: var cint ): ptr UncheckedArray[SDL_Window] {.importc.}
 proc SDL_CreateWindow* ( title: cstring, w, h: cint, flags: SDL_WindowFlags ): SDL_Window {.importc.}
-proc SDL_CreatePopupWindow* ( parent: SDL_Window, offset_x,offset_y,w,h: int, flags: SDL_WindowFlags ): SDL_Window {.importc.}
+proc SDL_CreatePopupWindow* ( parent: SDL_Window, offset_x,offset_y,w,h: cint, flags: SDL_WindowFlags ): SDL_Window {.importc.}
 proc SDL_CreateWindowWithProperties* ( props: SDL_PropertiesID ): SDL_Window {.importc.}
 proc SDL_GetWindowID* ( window: SDL_Window ): SDL_WindowID {.importc.}
 proc SDL_GetWindowFromID* ( id: SDL_WindowID ): SDL_Window {.importc.}
@@ -1362,19 +1361,19 @@ proc SDL_GetWindowFlags* ( window: SDL_Window ): SDL_WindowFlags {.importc.}
 proc SDL_SetWindowTitle* ( window: SDL_Window, title: cstring ): bool {.importc, discardable.}
 proc SDL_GetWindowTitle* ( window: SDL_Window ): cstring {.importc.}
 proc SDL_SetWindowIcon* ( window: SDL_Window, icon: ptr SDL_Surface ): bool {.importc.}
-proc SDL_SetWindowPosition* ( window: SDL_Window, x,y: int ): bool {.importc.}
-proc SDL_GetWindowPosition* ( window: SDL_Window, x,y: var int ): bool {.importc.}
-proc SDL_SetWindowSize* ( window: SDL_Window, w,h: int ): bool {.importc, discardable.}
-proc SDL_GetWindowSize* ( window: SDL_Window, w,h: var int ): bool {.importc.}
+proc SDL_SetWindowPosition* ( window: SDL_Window, x,y: cint ): bool {.importc.}
+proc SDL_GetWindowPosition* ( window: SDL_Window, x,y: var cint ): bool {.importc.}
+proc SDL_SetWindowSize* ( window: SDL_Window, w,h: cint ): bool {.importc, discardable.}
+proc SDL_GetWindowSize* ( window: SDL_Window, w,h: var cint ): bool {.importc.}
 proc SDL_GetWindowSafeArea* ( window: SDL_Window, rect: var SDL_Rect ): bool {.importc.}
 proc SDL_SetWindowAspectRatio* ( window: SDL_Window, min_aspect,max_aspect: cfloat ): bool {.importc, discardable.}
 proc SDL_GetWindowAspectRatio* ( window: SDL_Window, min_aspect,max_aspect: var cfloat ): bool {.importc.}
-proc SDL_GetWindowBordersSize* ( window: SDL_Window, top,left,bottom,right: var int ): bool {.importc.}
-proc SDL_GetWindowSizeInPixels* ( window: SDL_Window, w,h: var int ): bool {.importc.}
-proc SDL_SetWindowMinimumSize* ( window: SDL_Window, min_w,min_h: int ): bool {.importc, discardable.}
-proc SDL_GetWindowMinimumSize* ( window: SDL_Window, w,h: var int ): bool {.importc.}
-proc SDL_SetWindowMaximumSize* ( window: SDL_Window, max_w,max_h: int ): bool {.importc, discardable.}
-proc SDL_GetWindowMaximumSize* ( window: SDL_Window, w,h: var int ): bool {.importc.}
+proc SDL_GetWindowBordersSize* ( window: SDL_Window, top,left,bottom,right: var cint ): bool {.importc.}
+proc SDL_GetWindowSizeInPixels* ( window: SDL_Window, w,h: var cint ): bool {.importc.}
+proc SDL_SetWindowMinimumSize* ( window: SDL_Window, min_w,min_h: cint ): bool {.importc, discardable.}
+proc SDL_GetWindowMinimumSize* ( window: SDL_Window, w,h: var cint ): bool {.importc.}
+proc SDL_SetWindowMaximumSize* ( window: SDL_Window, max_w,max_h: cint ): bool {.importc, discardable.}
+proc SDL_GetWindowMaximumSize* ( window: SDL_Window, w,h: var cint ): bool {.importc.}
 proc SDL_SetWindowBordered* ( window: SDL_Window, bordered: bool ): bool {.importc, discardable.}
 proc SDL_SetWindowResizable* ( window: SDL_Window, resizable: bool ): bool {.importc, discardable.}
 proc SDL_SetWindowAlwaysOnTop* ( window: SDL_Window, on_top: bool ): bool {.importc, discardable.}
@@ -1388,10 +1387,10 @@ proc SDL_SetWindowFullscreen* ( window: SDL_Window, fullscreen: bool ): bool {.i
 proc SDL_SyncWindow* ( window: SDL_Window ): bool {.importc, discardable.}
 proc SDL_WindowHasSurface* ( window: SDL_Window ): bool {.importc.}
 proc SDL_GetWindowSurface* ( window: SDL_Window ): ptr SDL_Surface {.importc.}
-proc SDL_SetWindowSurfaceVSync* ( window: SDL_Window, vsync: int ): bool {.importc, discardable.}
-proc SDL_GetWindowSurfaceVSync* ( window: SDL_Window, vsync: var int ): bool {.importc.}
+proc SDL_SetWindowSurfaceVSync* ( window: SDL_Window, vsync: cint ): bool {.importc, discardable.}
+proc SDL_GetWindowSurfaceVSync* ( window: SDL_Window, vsync: var cint ): bool {.importc.}
 proc SDL_UpdateWindowSurface* ( window: SDL_Window ): bool {.importc, discardable.}
-proc SDL_UpdateWindowSurfaceRects* ( window: SDL_Window, rects: ptr SDL_Rect, numrects: int ): bool {.importc, discardable.}
+proc SDL_UpdateWindowSurfaceRects* ( window: SDL_Window, rects: ptr SDL_Rect, numrects: cint ): bool {.importc, discardable.}
 proc SDL_UpdateWindowSurfaceRects* ( window: SDL_Window, rects: openarray[SDL_Rect] ): bool {.importc, discardable.}
 proc SDL_DestroyWindowSurface* ( window: SDL_Window ): bool {.importc, discardable.}
 
@@ -1409,7 +1408,7 @@ proc SDL_GetWindowOpacity* ( window: SDL_Window ): cfloat {.importc.}
 proc SDL_SetWindowParent* ( window: SDL_Window, parent: SDL_Window ): bool {.importc, discardable.}
 proc SDL_SetWindowModal* ( window: SDL_Window, modal: bool ): bool {.importc, discardable.}
 proc SDL_SetWindowFocusable* ( window: SDL_Window, focusable: bool ): bool {.importc, discardable.}
-proc SDL_ShowWindowSystemMenu* ( window: SDL_Window, x,y: int ): bool {.importc, discardable.}
+proc SDL_ShowWindowSystemMenu* ( window: SDL_Window, x,y: cint ): bool {.importc, discardable.}
 
 type
   SDL_HitTestResult* {.size: sizeof(cint).} = enum
@@ -1441,8 +1440,8 @@ proc SDL_EGL_GetProcAddress* ( procname: cstring ): SDL_FunctionPointer {.import
 proc SDL_GL_UnloadLibrary* (): void {.importc.}
 proc SDL_GL_ExtensionSupported* ( extension: cstring ): bool {.importc.}
 proc SDL_GL_ResetAttributes* (): void {.importc.}
-proc SDL_GL_SetAttribute* ( attr: SDL_GLAttr, value: int ): bool {.importc, discardable.}
-proc SDL_GL_GetAttribute* ( attr: SDL_GLAttr, value: var int ): bool {.importc.}
+proc SDL_GL_SetAttribute* ( attr: SDL_GLAttr, value: cint ): bool {.importc, discardable.}
+proc SDL_GL_GetAttribute* ( attr: SDL_GLAttr, value: var cint ): bool {.importc.}
 proc SDL_GL_CreateContext* ( window: SDL_Window ): SDL_GLContext {.importc.}
 proc SDL_GL_MakeCurrent* ( window: SDL_Window, context: SDL_GLContext ): bool {.importc.}
 proc SDL_GL_GetCurrentWindow* (): SDL_Window {.importc.}
@@ -1451,8 +1450,8 @@ proc SDL_EGL_GetCurrentDisplay* (): SDL_EGLDisplay {.importc.}
 proc SDL_EGL_GetCurrentConfig* (): SDL_EGLConfig {.importc.}
 proc SDL_EGL_GetWindowSurface* ( window: SDL_Window ): SDL_EGLSurface {.importc.}
 proc SDL_EGL_SetAttributeCallbacks* ( platformAttribCallback: SDL_EGLAttribArrayCallback, surfaceAttribCallback: SDL_EGLIntArrayCallback, contextAttribCallback: SDL_EGLIntArrayCallback, userdata: pointer ): void {.importc.}
-proc SDL_GL_SetSwapInterval* ( interval: int ): bool {.importc, discardable.}
-proc SDL_GL_GetSwapInterval* ( interval: var int ): bool {.importc.}
+proc SDL_GL_SetSwapInterval* ( interval: cint ): bool {.importc, discardable.}
+proc SDL_GL_GetSwapInterval* ( interval: var cint ): bool {.importc.}
 proc SDL_GL_SwapWindow* ( window: SDL_Window ): bool {.importc, discardable.}
 proc SDL_GL_DestroyContext* ( context: SDL_GLContext ): bool {.importc, discardable.}
 
@@ -2165,8 +2164,8 @@ proc SDL_GPUSupportsProperties* ( props: SDL_PropertiesID ): bool {.importc.}
 proc SDL_CreateGPUDevice* ( format_flags: SDL_GPUShaderFormat, debug_mode: bool, name: cstring ): SDL_GPUDevice {.importc.}
 proc SDL_CreateGPUDeviceWithProperties* ( props: SDL_PropertiesID): SDL_GPUDevice {.importc.}
 proc SDL_DestroyGPUDevice* ( device: SDL_GPUDevice ): void {.importc.}
-proc SDL_GetNumGPUDrivers* (): int {.importc.}
-proc SDL_GetGPUDriver* ( index: int ): cstring {.importc.}
+proc SDL_GetNumGPUDrivers* (): cint {.importc.}
+proc SDL_GetGPUDriver* ( index: cint ): cstring {.importc.}
 proc SDL_GetGPUDeviceDriver* ( device: SDL_GPUDevice ): cstring {.importc.}
 proc SDL_GetGPUShaderFormats* ( device: SDL_GPUDevice ): SDL_GPUShaderFormat {.importc.}
 proc SDL_CreateGPUComputePipeline* ( device: SDL_GPUDevice, createinfo: ptr SDL_GPUComputePipelineCreateInfo ): SDL_GPUComputePipeline {.importc.}
@@ -2330,7 +2329,7 @@ type
   SDL_GUID* {.bycopy.} = object
     data*: array[16, uint8]
 
-proc SDL_GUIDToString* ( guid: SDL_GUID, pszGUID: var cstring, cbGUID: int ): void {.importc.}
+proc SDL_GUIDToString* ( guid: SDL_GUID, pszGUID: var cstring, cbGUID: cint ): void {.importc.}
 proc SDL_StringToGUID* ( pchGUID: cstring ): SDL_GUID {.importc.}
 
 #endregion
@@ -2365,8 +2364,8 @@ type
     bus_type*: SDL_hid_bus_type
     next*: ptr SDL_hid_device_info
 
-proc SDL_hid_init* (): int {.importc.}
-proc SDL_hid_exit* (): int {.importc.}
+proc SDL_hid_init* (): cint {.importc.}
+proc SDL_hid_exit* (): cint {.importc.}
 proc SDL_hid_device_change_count* (): uint32 {.importc.}
 proc SDL_hid_enumerate* ( vendor_id,product_id: uint16 ): ptr[SDL_hid_device_info] {.importc.}
   ## NOTE: vendor_id was "unsigned short"
@@ -2374,20 +2373,20 @@ proc SDL_hid_free_enumeration* ( devs: ptr[SDL_hid_device_info] ): void {.import
 proc SDL_hid_open* ( vendor_id,product_id: uint16, serial_number: ptr[cwchar_t] ): SDL_hid_device {.importc.}
   ## NOTE: vendor_id was "unsigned short"
 proc SDL_hid_open_path* ( path: cstring ): SDL_hid_device {.importc.}
-proc SDL_hid_write* ( dev: SDL_hid_device, data: ptr[uint8], length: csize_t ): int {.importc.}
-proc SDL_hid_read_timeout* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t, milliseconds: int ): int {.importc.}
-proc SDL_hid_read* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t ): int {.importc.}
-proc SDL_hid_set_nonblocking* ( dev: SDL_hid_device, nonblock: int ): int {.importc.}
-proc SDL_hid_send_feature_report* ( dev: SDL_hid_device, data: ptr[uint8], length: csize_t ): int {.importc.}
-proc SDL_hid_get_feature_report* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t ): int {.importc.}
-proc SDL_hid_get_input_report* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t ): int {.importc.}
-proc SDL_hid_close* ( dev: SDL_hid_device ): int {.importc.}
-proc SDL_hid_get_manufacturer_string* ( dev: SDL_hid_device, str: ptr[cwchar_t], maxlen: csize_t ): int {.importc.}
-proc SDL_hid_get_product_string* ( dev: SDL_hid_device, str: ptr[cwchar_t], maxlen: csize_t ): int {.importc.}
-proc SDL_hid_get_serial_number_string* ( dev: SDL_hid_device, str: ptr[cwchar_t], maxlen: csize_t ): int {.importc.}
-proc SDL_hid_get_indexed_string* ( dev: SDL_hid_device, string_index: int, str: ptr[cwchar_t], maxlen: csize_t ): int {.importc.}
+proc SDL_hid_write* ( dev: SDL_hid_device, data: ptr[uint8], length: csize_t ): cint {.importc.}
+proc SDL_hid_read_timeout* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t, milliseconds: cint ): cint {.importc.}
+proc SDL_hid_read* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t ): cint {.importc.}
+proc SDL_hid_set_nonblocking* ( dev: SDL_hid_device, nonblock: cint ): cint {.importc.}
+proc SDL_hid_send_feature_report* ( dev: SDL_hid_device, data: ptr[uint8], length: csize_t ): cint {.importc.}
+proc SDL_hid_get_feature_report* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t ): cint {.importc.}
+proc SDL_hid_get_input_report* ( dev: SDL_hid_device, data: var ptr[uint8], length: csize_t ): cint {.importc.}
+proc SDL_hid_close* ( dev: SDL_hid_device ): cint {.importc.}
+proc SDL_hid_get_manufacturer_string* ( dev: SDL_hid_device, str: ptr[cwchar_t], maxlen: csize_t ): cint {.importc.}
+proc SDL_hid_get_product_string* ( dev: SDL_hid_device, str: ptr[cwchar_t], maxlen: csize_t ): cint {.importc.}
+proc SDL_hid_get_serial_number_string* ( dev: SDL_hid_device, str: ptr[cwchar_t], maxlen: csize_t ): cint {.importc.}
+proc SDL_hid_get_indexed_string* ( dev: SDL_hid_device, string_index: cint, str: ptr[cwchar_t], maxlen: csize_t ): cint {.importc.}
 proc SDL_hid_get_device_info* ( dev: SDL_hid_device ): ptr[SDL_hid_device_info] {.importc.}
-proc SDL_hid_get_report_descriptor* ( dev: SDL_hid_device, buf: var ptr[uint8], buf_size: csize_t ): int {.importc.}
+proc SDL_hid_get_report_descriptor* ( dev: SDL_hid_device, buf: var ptr[uint8], buf_size: csize_t ): cint {.importc.}
 proc SDL_hid_ble_scan* ( active: bool ): void {.importc.}
 
 #endregion
@@ -2670,18 +2669,18 @@ type
 
 const SDL_STANDARD_GRAVITY* = 9.80665
 
-proc SDL_GetSensors* ( count: var int ): ptr UncheckedArray[SDL_SensorID] {.importc.}
+proc SDL_GetSensors* ( count: var cint ): ptr UncheckedArray[SDL_SensorID] {.importc.}
 proc SDL_GetSensorNameForID* ( instance_id: SDL_SensorID ): cstring {.importc.}
 proc SDL_GetSensorTypeForID* ( instance_id: SDL_SensorID ): SDL_SensorType {.importc.}
-proc SDL_GetSensorNonPortableTypeForID* ( instance_id: SDL_SensorID ): int {.importc.}
+proc SDL_GetSensorNonPortableTypeForID* ( instance_id: SDL_SensorID ): cint {.importc.}
 proc SDL_OpenSensor* ( instance_id: SDL_SensorID ): SDL_Sensor {.importc.}
 proc SDL_GetSensorFromID* ( instance_id: SDL_SensorID ): SDL_Sensor {.importc.}
 proc SDL_GetSensorProperties* ( sensor: SDL_Sensor ): SDL_PropertiesID {.importc.}
 proc SDL_GetSensorName* ( sensor: SDL_Sensor ): cstring {.importc.}
 proc SDL_GetSensorType* ( sensor: SDL_Sensor ): SDL_SensorType {.importc.}
-proc SDL_GetSensorNonPortableType* ( sensor: SDL_Sensor ): int {.importc.}
+proc SDL_GetSensorNonPortableType* ( sensor: SDL_Sensor ): cint {.importc.}
 proc SDL_GetSensorID* ( sensor: SDL_Sensor ): SDL_SensorID {.importc.}
-proc SDL_GetSensorData* ( sensor: SDL_Sensor, data: ptr[cfloat], num_values: int ): bool {.importc.}
+proc SDL_GetSensorData* ( sensor: SDL_Sensor, data: ptr[cfloat], num_values: cint ): bool {.importc.}
 proc SDL_GetSensorData* ( sensor: SDL_Sensor, data: openarray[cfloat] ): bool {.importc.}
 proc SDL_CloseSensor* ( sensor: SDL_Sensor ): void {.importc.}
 proc SDL_UpdateSensors* (): void {.importc.}
@@ -2700,7 +2699,7 @@ type
     SDL_POWERSTATE_CHARGING,
     SDL_POWERSTATE_CHARGED
 
-proc SDL_GetPowerInfo* ( seconds: var int, percent: var int ): SDL_PowerState {.importc.}
+proc SDL_GetPowerInfo* ( seconds: var cint, percent: var cint ): SDL_PowerState {.importc.}
 
 #endregion
 
@@ -2735,10 +2734,10 @@ const SDL_JOYSTICK_AXIS_MIN* = -32768
 proc SDL_LockJoysticks* (): void {.importc.}
 proc SDL_UnlockJoysticks* (): void {.importc.}
 proc SDL_HasJoystick* (): bool {.importc.}
-proc SDL_GetJoysticks* ( count: var int ): ptr UncheckedArray[SDL_JoystickID] {.importc.}
+proc SDL_GetJoysticks* ( count: var cint ): ptr UncheckedArray[SDL_JoystickID] {.importc.}
 proc SDL_GetJoystickNameForID* ( instance_id: SDL_JoystickID ): cstring {.importc.}
 proc SDL_GetJoystickPathForID* ( instance_id: SDL_JoystickID ): cstring {.importc.}
-proc SDL_GetJoystickPlayerIndexForID* ( instance_id: SDL_JoystickID ): int {.importc.}
+proc SDL_GetJoystickPlayerIndexForID* ( instance_id: SDL_JoystickID ): cint {.importc.}
 proc SDL_GetJoystickGUIDForID* ( instance_id: SDL_JoystickID ): SDL_GUID {.importc.}
 proc SDL_GetJoystickVendorForID* ( instance_id: SDL_JoystickID ): uint16 {.importc.}
 proc SDL_GetJoystickProductForID* ( instance_id: SDL_JoystickID ): uint16 {.importc.}
@@ -2746,7 +2745,7 @@ proc SDL_GetJoystickProductVersionForID* ( instance_id: SDL_JoystickID ): uint16
 proc SDL_GetJoystickTypeForID* ( instance_id: SDL_JoystickID ): SDL_JoystickType {.importc.}
 proc SDL_OpenJoystick* ( instance_id: SDL_JoystickID ): SDL_Joystick {.importc.}
 proc SDL_GetJoystickFromID* ( instance_id: SDL_JoystickID ): SDL_Joystick {.importc.}
-proc SDL_GetJoystickFromPlayerIndex* ( player_index: int ): SDL_Joystick {.importc.}
+proc SDL_GetJoystickFromPlayerIndex* ( player_index: cint ): SDL_Joystick {.importc.}
 
 type
   SDL_VirtualJoystickTouchpadDesc* {.bycopy.} = object
@@ -2788,12 +2787,12 @@ type
 proc SDL_AttachVirtualJoystick* ( desc: ptr SDL_VirtualJoystickDesc ): SDL_JoystickID {.importc.}
 proc SDL_DetachVirtualJoystick* ( instance_id: SDL_JoystickID ): bool {.importc.}
 proc SDL_IsJoystickVirtual* ( instance_id: SDL_JoystickID ): bool {.importc.}
-proc SDL_SetJoystickVirtualAxis* ( joystick: SDL_Joystick, axis: int, value: int16 ): bool {.importc.}
-proc SDL_SetJoystickVirtualBall* ( joystick: SDL_Joystick, ball: int, xrel: int16, yrel: int16 ): bool {.importc.}
-proc SDL_SetJoystickVirtualButton* ( joystick: SDL_Joystick, button: int, down: bool ): bool {.importc.}
-proc SDL_SetJoystickVirtualHat* ( joystick: SDL_Joystick, hat: int, value: uint8 ): bool {.importc.}
-proc SDL_SetJoystickVirtualTouchpad* ( joystick: SDL_Joystick, touchpad,finger: int, down: bool, x,y: cfloat, pressure: cfloat ): bool {.importc.}
-proc SDL_SendJoystickVirtualSensorData* ( joystick: SDL_Joystick, kind: SDL_SensorType, sensor_timestamp: uint64, data: ptr[cfloat], num_values: int ): bool {.importc.}
+proc SDL_SetJoystickVirtualAxis* ( joystick: SDL_Joystick, axis: cint, value: int16 ): bool {.importc.}
+proc SDL_SetJoystickVirtualBall* ( joystick: SDL_Joystick, ball: cint, xrel: int16, yrel: int16 ): bool {.importc.}
+proc SDL_SetJoystickVirtualButton* ( joystick: SDL_Joystick, button: cint, down: bool ): bool {.importc.}
+proc SDL_SetJoystickVirtualHat* ( joystick: SDL_Joystick, hat: cint, value: uint8 ): bool {.importc.}
+proc SDL_SetJoystickVirtualTouchpad* ( joystick: SDL_Joystick, touchpad,finger: cint, down: bool, x,y: cfloat, pressure: cfloat ): bool {.importc.}
+proc SDL_SendJoystickVirtualSensorData* ( joystick: SDL_Joystick, kind: SDL_SensorType, sensor_timestamp: uint64, data: ptr[cfloat], num_values: cint ): bool {.importc.}
 proc SDL_SendJoystickVirtualSensorData* ( joystick: SDL_Joystick, kind: SDL_SensorType, sensor_timestamp: uint64, data: openarray[cfloat] ): bool {.importc.}
 
 proc SDL_GetJoystickProperties* ( joystick: SDL_Joystick ): SDL_PropertiesID {.importc.}
@@ -2806,8 +2805,8 @@ const SDL_PROP_JOYSTICK_CAP_TRIGGER_RUMBLE_BOOLEAN* = "SDL.joystick.cap.trigger_
 
 proc SDL_GetJoystickName* ( joystick: SDL_Joystick ): cstring {.importc.}
 proc SDL_GetJoystickPath* ( joystick: SDL_Joystick ): cstring {.importc.}
-proc SDL_GetJoystickPlayerIndex* ( joystick: SDL_Joystick ): int {.importc.}
-proc SDL_SetJoystickPlayerIndex* ( joystick: SDL_Joystick, player_index: int ): bool {.importc.}
+proc SDL_GetJoystickPlayerIndex* ( joystick: SDL_Joystick ): cint {.importc.}
+proc SDL_SetJoystickPlayerIndex* ( joystick: SDL_Joystick, player_index: cint ): bool {.importc.}
 proc SDL_GetJoystickGUID* ( joystick: SDL_Joystick ): SDL_GUID {.importc.}
 proc SDL_GetJoystickVendor* ( joystick: SDL_Joystick ): uint16 {.importc.}
 proc SDL_GetJoystickProduct* ( joystick: SDL_Joystick ): uint16 {.importc.}
@@ -2818,18 +2817,18 @@ proc SDL_GetJoystickType* ( joystick: SDL_Joystick ): SDL_JoystickType {.importc
 proc SDL_GetJoystickGUIDInfo* ( guid: SDL_GUID, vendor,product,version,crc16: var uint16 ): void {.importc.}
 proc SDL_JoystickConnected* ( joystick: SDL_Joystick ): bool {.importc.}
 proc SDL_GetJoystickID* ( joystick: SDL_Joystick ): SDL_JoystickID {.importc.}
-proc SDL_GetNumJoystickAxes* ( joystick: SDL_Joystick ): int {.importc.}
-proc SDL_GetNumJoystickBalls* ( joystick: SDL_Joystick ): int {.importc.}
-proc SDL_GetNumJoystickHats* ( joystick: SDL_Joystick ): int {.importc.}
-proc SDL_GetNumJoystickButtons* ( joystick: SDL_Joystick ): int {.importc.}
+proc SDL_GetNumJoystickAxes* ( joystick: SDL_Joystick ): cint {.importc.}
+proc SDL_GetNumJoystickBalls* ( joystick: SDL_Joystick ): cint {.importc.}
+proc SDL_GetNumJoystickHats* ( joystick: SDL_Joystick ): cint {.importc.}
+proc SDL_GetNumJoystickButtons* ( joystick: SDL_Joystick ): cint {.importc.}
 proc SDL_SetJoystickEventsEnabled* ( enabled: bool ): void {.importc.}
 proc SDL_JoystickEventsEnabled* (): bool {.importc.}
 proc SDL_UpdateJoysticks* (): void {.importc.}
-proc SDL_GetJoystickAxis* ( joystick: SDL_Joystick, axis: int): int16 {.importc.}
-proc SDL_GetJoystickAxisInitialState* ( joystick: SDL_Joystick, axis: int, state: var int16 ): bool {.importc.}
-proc SDL_GetJoystickBall* ( joystick: SDL_Joystick, ball: int, dx,dy: var int ): bool {.importc.}
+proc SDL_GetJoystickAxis* ( joystick: SDL_Joystick, axis: cint): int16 {.importc.}
+proc SDL_GetJoystickAxisInitialState* ( joystick: SDL_Joystick, axis: cint, state: var int16 ): bool {.importc.}
+proc SDL_GetJoystickBall* ( joystick: SDL_Joystick, ball: cint, dx,dy: var cint ): bool {.importc.}
 
-proc SDL_GetJoystickHat* ( joystick: SDL_Joystick, hat: int ): uint8 {.importc.}
+proc SDL_GetJoystickHat* ( joystick: SDL_Joystick, hat: cint ): uint8 {.importc.}
 
 const SDL_HAT_CENTERED*  = 0x00'u
 const SDL_HAT_UP*        = 0x01'u
@@ -2841,14 +2840,14 @@ const SDL_HAT_RIGHTDOWN* = SDL_HAT_RIGHT.uint or SDL_HAT_DOWN.uint
 const SDL_HAT_LEFTUP*    = SDL_HAT_LEFT.uint or SDL_HAT_UP.uint
 const SDL_HAT_LEFTDOWN*  = SDL_HAT_LEFT.uint or SDL_HAT_DOWN.uint
 
-proc SDL_GetJoystickButton* ( joystick: SDL_Joystick, button: int ): bool {.importc.}
+proc SDL_GetJoystickButton* ( joystick: SDL_Joystick, button: cint ): bool {.importc.}
 proc SDL_RumbleJoystick* ( joystick: SDL_Joystick, low_frequency_rumble,high_frequency_rumble: uint16, duration_ms: uint32 ): bool {.importc.}
 proc SDL_RumbleJoystickTriggers* ( joystick: SDL_Joystick, left_rumble,right_rumble: uint16, duration_ms: uint32 ): bool {.importc.}
 proc SDL_SetJoystickLED* ( joystick: SDL_Joystick, red,green,blue: uint8 ): bool {.importc.}
-proc SDL_SendJoystickEffect* ( joystick: SDL_Joystick, data: pointer, size: int ): bool {.importc.}
+proc SDL_SendJoystickEffect* ( joystick: SDL_Joystick, data: pointer, size: cint ): bool {.importc.}
 proc SDL_CloseJoystick* ( joystick: SDL_Joystick ): void {.importc.}
 proc SDL_GetJoystickConnectionState* ( joystick: SDL_Joystick ): SDL_JoystickConnectionState {.importc.}
-proc SDL_GetJoystickPowerInfo* ( joystick: SDL_Joystick, percent: var int ): SDL_PowerState {.importc.}
+proc SDL_GetJoystickPowerInfo* ( joystick: SDL_Joystick, percent: var cint ): SDL_PowerState {.importc.}
 
 #endregion
 
@@ -2982,7 +2981,7 @@ const SDL_HAPTIC_SPHERICAL*     = 2
 const SDL_HAPTIC_STEERING_AXIS* = 3
 const SDL_HAPTIC_INFINITY*      = 4294967295'u
 
-proc SDL_GetHaptics* ( count: var int ): ptr UncheckedArray[SDL_HapticID] {.importc.}
+proc SDL_GetHaptics* ( count: var cint ): ptr UncheckedArray[SDL_HapticID] {.importc.}
 proc SDL_GetHapticNameForID* ( instance_id: SDL_HapticID ): cstring {.importc.}
 proc SDL_OpenHaptic* ( instance_id: SDL_HapticID ): SDL_Haptic {.importc.}
 proc SDL_GetHapticFromID* ( instance_id: SDL_HapticID ): SDL_Haptic {.importc.}
@@ -2993,19 +2992,19 @@ proc SDL_OpenHapticFromMouse* (): SDL_Haptic {.importc.}
 proc SDL_IsJoystickHaptic* ( joystick: SDL_Joystick ): bool {.importc.}
 proc SDL_OpenHapticFromJoystick* ( joystick: SDL_Joystick ): SDL_Haptic {.importc.}
 proc SDL_CloseHaptic* ( haptic: SDL_Haptic ): void {.importc.}
-proc SDL_GetMaxHapticEffects* ( haptic: SDL_Haptic ): int {.importc.}
-proc SDL_GetMaxHapticEffectsPlaying* ( haptic: SDL_Haptic ): int {.importc.}
+proc SDL_GetMaxHapticEffects* ( haptic: SDL_Haptic ): cint {.importc.}
+proc SDL_GetMaxHapticEffectsPlaying* ( haptic: SDL_Haptic ): cint {.importc.}
 proc SDL_GetHapticFeatures* ( haptic: SDL_Haptic ): uint32 {.importc.}
-proc SDL_GetNumHapticAxes* ( haptic: SDL_Haptic ): int {.importc.}
+proc SDL_GetNumHapticAxes* ( haptic: SDL_Haptic ): cint {.importc.}
 proc SDL_HapticEffectSupported* ( haptic: SDL_Haptic, effect: ptr SDL_HapticEffect ): bool {.importc.}
-proc SDL_CreateHapticEffect* ( haptic: SDL_Haptic, effect: ptr SDL_HapticEffect ): int {.importc.}
-proc SDL_UpdateHapticEffect* ( haptic: SDL_Haptic, effect: int, data: ptr SDL_HapticEffect ): bool {.importc.}
-proc SDL_RunHapticEffect* ( haptic: SDL_Haptic, effect: int, iterations: uint32 ): bool {.importc.}
-proc SDL_StopHapticEffect* ( haptic: SDL_Haptic, effect: int ): bool {.importc.}
-proc SDL_DestroyHapticEffect* ( haptic: SDL_Haptic, effect: int ): void {.importc.}
-proc SDL_GetHapticEffectStatus* ( haptic: SDL_Haptic, effect: int ): bool {.importc.}
-proc SDL_SetHapticGain* ( haptic: SDL_Haptic, gain: int ): bool {.importc.}
-proc SDL_SetHapticAutocenter* ( haptic: SDL_Haptic, autocenter: int ): bool {.importc.}
+proc SDL_CreateHapticEffect* ( haptic: SDL_Haptic, effect: ptr SDL_HapticEffect ): cint {.importc.}
+proc SDL_UpdateHapticEffect* ( haptic: SDL_Haptic, effect: cint, data: ptr SDL_HapticEffect ): bool {.importc.}
+proc SDL_RunHapticEffect* ( haptic: SDL_Haptic, effect: cint, iterations: uint32 ): bool {.importc.}
+proc SDL_StopHapticEffect* ( haptic: SDL_Haptic, effect: cint ): bool {.importc.}
+proc SDL_DestroyHapticEffect* ( haptic: SDL_Haptic, effect: cint ): void {.importc.}
+proc SDL_GetHapticEffectStatus* ( haptic: SDL_Haptic, effect: cint ): bool {.importc.}
+proc SDL_SetHapticGain* ( haptic: SDL_Haptic, gain: cint ): bool {.importc.}
+proc SDL_SetHapticAutocenter* ( haptic: SDL_Haptic, autocenter: cint ): bool {.importc.}
 proc SDL_PauseHaptic* ( haptic: SDL_Haptic ): bool {.importc.}
 proc SDL_ResumeHaptic* ( haptic: SDL_Haptic ): bool {.importc.}
 proc SDL_StopHapticEffects* ( haptic: SDL_Haptic ): bool {.importc.}
@@ -3123,21 +3122,21 @@ type
     output_type*: SDL_GamepadBindingType
     output*: INNER_C_UNION_SDL_8
 
-proc SDL_AddGamepadMapping* ( mapping: cstring ): int {.importc.}
-proc SDL_AddGamepadMappingsFromIO* ( src: SDL_IOStream, closeio: bool ): int {.importc.}
-proc SDL_AddGamepadMappingsFromFile* ( file: cstring ): int {.importc.}
+proc SDL_AddGamepadMapping* ( mapping: cstring ): cint {.importc.}
+proc SDL_AddGamepadMappingsFromIO* ( src: SDL_IOStream, closeio: bool ): cint {.importc.}
+proc SDL_AddGamepadMappingsFromFile* ( file: cstring ): cint {.importc.}
 proc SDL_ReloadGamepadMappings* (): bool {.importc.}
-proc SDL_GetGamepadMappings* ( count: var int ): ptr UncheckedArray[cstring] {.importc.}
+proc SDL_GetGamepadMappings* ( count: var cint ): ptr UncheckedArray[cstring] {.importc.}
 proc SDL_GetGamepadMappingForGUID* ( guid: SDL_GUID ): cstring {.importc.}
 
 proc SDL_GetGamepadMapping* ( gamepad: SDL_Gamepad ): cstring {.importc.}
 proc SDL_SetGamepadMapping* ( instance_id: SDL_JoystickID, mapping: cstring ): bool {.importc.}
 proc SDL_HasGamepad* (): bool {.importc.}
-proc SDL_GetGamepads* ( count: var int ): ptr UncheckedArray[SDL_JoystickID] {.importc.}
+proc SDL_GetGamepads* ( count: var cint ): ptr UncheckedArray[SDL_JoystickID] {.importc.}
 proc SDL_IsGamepad* ( instance_id: SDL_JoystickID ): bool {.importc.}
 proc SDL_GetGamepadNameForID* ( instance_id: SDL_JoystickID ): cstring {.importc.}
 proc SDL_GetGamepadPathForID* ( instance_id: SDL_JoystickID ): cstring {.importc.}
-proc SDL_GetGamepadPlayerIndexForID* ( instance_id: SDL_JoystickID ): int {.importc.}
+proc SDL_GetGamepadPlayerIndexForID* ( instance_id: SDL_JoystickID ): cint {.importc.}
 proc SDL_GetGamepadGUIDForID* ( instance_id: SDL_JoystickID ): SDL_GUID {.importc.}
 proc SDL_GetGamepadVendorForID* ( instance_id: SDL_JoystickID ): uint16 {.importc.}
 proc SDL_GetGamepadProductForID* ( instance_id: SDL_JoystickID ): uint16 {.importc.}
@@ -3147,7 +3146,7 @@ proc SDL_GetRealGamepadTypeForID* ( instance_id: SDL_JoystickID ): SDL_GamepadTy
 proc SDL_GetGamepadMappingForID* ( instance_id: SDL_JoystickID ): cstring {.importc.}
 proc SDL_OpenGamepad* ( instance_id: SDL_JoystickID ): SDL_Gamepad {.importc.}
 proc SDL_GetGamepadFromID* ( instance_id: SDL_JoystickID ): SDL_Gamepad {.importc.}
-proc SDL_GetGamepadFromPlayerIndex* ( player_index: int ): SDL_Gamepad {.importc.}
+proc SDL_GetGamepadFromPlayerIndex* ( player_index: cint ): SDL_Gamepad {.importc.}
 proc SDL_GetGamepadProperties* ( gamepad: SDL_Gamepad ): SDL_PropertiesID {.importc.}
 
 const SDL_PROP_GAMEPAD_CAP_MONO_LED_BOOLEAN*       = SDL_PROP_JOYSTICK_CAP_MONO_LED_BOOLEAN
@@ -3161,8 +3160,8 @@ proc SDL_GetGamepadName* ( gamepad: SDL_Gamepad ): cstring {.importc.}
 proc SDL_GetGamepadPath* ( gamepad: SDL_Gamepad ): cstring {.importc.}
 proc SDL_GetGamepadType* ( gamepad: SDL_Gamepad ): SDL_GamepadType {.importc.}
 proc SDL_GetRealGamepadType* ( gamepad: SDL_Gamepad ): SDL_GamepadType {.importc.}
-proc SDL_GetGamepadPlayerIndex* ( gamepad: SDL_Gamepad ): int {.importc.}
-proc SDL_SetGamepadPlayerIndex* ( gamepad: SDL_Gamepad, player_index: int ): bool {.importc.}
+proc SDL_GetGamepadPlayerIndex* ( gamepad: SDL_Gamepad ): cint {.importc.}
+proc SDL_SetGamepadPlayerIndex* ( gamepad: SDL_Gamepad, player_index: cint ): bool {.importc.}
 proc SDL_GetGamepadVendor* ( gamepad: SDL_Gamepad ): uint16 {.importc.}
 proc SDL_GetGamepadProduct* ( gamepad: SDL_Gamepad ): uint16 {.importc.}
 proc SDL_GetGamepadProductVersion* ( gamepad: SDL_Gamepad ): uint16 {.importc.}
@@ -3170,12 +3169,12 @@ proc SDL_GetGamepadFirmwareVersion* ( gamepad: SDL_Gamepad ): uint16 {.importc.}
 proc SDL_GetGamepadSerial* ( gamepad: SDL_Gamepad ): cstring {.importc.}
 proc SDL_GetGamepadSteamHandle* ( gamepad: SDL_Gamepad ): uint64 {.importc.}
 proc SDL_GetGamepadConnectionState* ( gamepad: SDL_Gamepad ): SDL_JoystickConnectionState {.importc.}
-proc SDL_GetGamepadPowerInfo* ( gamepad: SDL_Gamepad, percent: var int ): SDL_PowerState {.importc.}
+proc SDL_GetGamepadPowerInfo* ( gamepad: SDL_Gamepad, percent: var cint ): SDL_PowerState {.importc.}
 proc SDL_GamepadConnected* ( gamepad: SDL_Gamepad ): bool {.importc.}
 proc SDL_GetGamepadJoystick* ( gamepad: SDL_Gamepad ): SDL_Joystick {.importc.}
 proc SDL_SetGamepadEventsEnabled* ( enabled: bool ): void {.importc.}
 proc SDL_GamepadEventsEnabled* (): bool {.importc.}
-proc SDL_GetGamepadBindings* ( gamepad: SDL_Gamepad, count: var int ): ptr UncheckedArray[ptr SDL_GamepadBinding] {.importc.}
+proc SDL_GetGamepadBindings* ( gamepad: SDL_Gamepad, count: var cint ): ptr UncheckedArray[ptr SDL_GamepadBinding] {.importc.}
 proc SDL_UpdateGamepads* (): void {.importc.}
 proc SDL_GetGamepadTypeFromString* ( str: cstring ): SDL_GamepadType {.importc.}
 proc SDL_GetGamepadStringForType* ( kind: SDL_GamepadType ): cstring {.importc.}
@@ -3190,19 +3189,19 @@ proc SDL_GamepadHasButton* ( gamepad: SDL_Gamepad, button: SDL_GamepadButton ): 
 proc SDL_GetGamepadButton* ( gamepad: SDL_Gamepad, button: SDL_GamepadButton ): bool {.importc.}
 proc SDL_GetGamepadButtonLabelForType* ( kind: SDL_GamepadType, button: SDL_GamepadButton ): SDL_GamepadButtonLabel {.importc.}
 proc SDL_GetGamepadButtonLabel* ( gamepad: SDL_Gamepad, button: SDL_GamepadButton ): SDL_GamepadButtonLabel {.importc.}
-proc SDL_GetNumGamepadTouchpads* ( gamepad: SDL_Gamepad ): int {.importc.}
-proc SDL_GetNumGamepadTouchpadFingers* ( gamepad: SDL_Gamepad, touchpad: int ): int {.importc.}
-proc SDL_GetGamepadTouchpadFinger* ( gamepad: SDL_Gamepad, touchpad,finger: int, down: var bool, x,y,pressure: cfloat ): bool {.importc.}
+proc SDL_GetNumGamepadTouchpads* ( gamepad: SDL_Gamepad ): cint {.importc.}
+proc SDL_GetNumGamepadTouchpadFingers* ( gamepad: SDL_Gamepad, touchpad: cint ): cint {.importc.}
+proc SDL_GetGamepadTouchpadFinger* ( gamepad: SDL_Gamepad, touchpad,finger: cint, down: var bool, x,y,pressure: cfloat ): bool {.importc.}
 proc SDL_GamepadHasSensor* ( gamepad: SDL_Gamepad, kind: SDL_SensorType ): bool {.importc.}
 proc SDL_SetGamepadSensorEnabled* ( gamepad: SDL_Gamepad, kind: SDL_SensorType, enabled: bool ): bool {.importc.}
 proc SDL_GamepadSensorEnabled* ( gamepad: SDL_Gamepad, kind: SDL_SensorType ): bool {.importc.}
 proc SDL_GetGamepadSensorDataRate* ( gamepad: SDL_Gamepad, kind: SDL_SensorType ): cfloat {.importc.}
-proc SDL_GetGamepadSensorData* ( gamepad: SDL_Gamepad, kind: SDL_SensorType, data: ptr[cfloat], num_values: int ): bool {.importc.}
+proc SDL_GetGamepadSensorData* ( gamepad: SDL_Gamepad, kind: SDL_SensorType, data: ptr[cfloat], num_values: cint ): bool {.importc.}
 proc SDL_GetGamepadSensorData* ( gamepad: SDL_Gamepad, kind: SDL_SensorType, data: openarray[cfloat] ): bool {.importc.}
 proc SDL_RumbleGamepad* ( gamepad: SDL_Gamepad, low_frequency_rumble,high_frequency_rumble: uint16, duration_ms: uint32 ): bool {.importc.}
 proc SDL_RumbleGamepadTriggers* ( gamepad: SDL_Gamepad, left_rumble,right_rumble: uint16, duration_ms: uint32 ): bool {.importc.}
 proc SDL_SetGamepadLED* ( gamepad: SDL_Gamepad, red,green,blue: uint8 ): bool {.importc.}
-proc SDL_SendGamepadEffect* ( gamepad: SDL_Gamepad, data: pointer, size: int ): bool {.importc.}
+proc SDL_SendGamepadEffect* ( gamepad: SDL_Gamepad, data: pointer, size: cint ): bool {.importc.}
 proc SDL_CloseGamepad* ( gamepad: SDL_Gamepad ): void {.importc.}
 proc SDL_GetGamepadAppleSFSymbolsNameForButton* ( gamepad: SDL_Gamepad, button: SDL_GamepadButton ): cstring {.importc.}
 proc SDL_GetGamepadAppleSFSymbolsNameForAxis* ( gamepad: SDL_Gamepad, axis: SDL_GamepadAxis ): cstring {.importc.}
@@ -3762,10 +3761,10 @@ type
   SDL_KeyboardID* = uint32
 
 proc SDL_HasKeyboard* (): bool {.importc.}
-proc SDL_GetKeyboards* ( count: var int ): ptr UncheckedArray[SDL_KeyboardID] {.importc.}
+proc SDL_GetKeyboards* ( count: var cint ): ptr UncheckedArray[SDL_KeyboardID] {.importc.}
 proc SDL_GetKeyboardNameForID* ( instance_id: SDL_KeyboardID ): cstring {.importc.}
 proc SDL_GetKeyboardFocus* (): SDL_Window {.importc.}
-proc SDL_GetKeyboardState* ( numkeys: var int ): ptr UncheckedArray[bool] {.importc.}
+proc SDL_GetKeyboardState* ( numkeys: var cint ): ptr UncheckedArray[bool] {.importc.}
 proc SDL_ResetKeyboard* (): void {.importc.}
 proc SDL_GetModState* (): SDL_Keymod {.importc.}
 proc SDL_SetModState* ( modstate: SDL_Keymod ): void {.importc.}
@@ -3801,8 +3800,8 @@ proc SDL_StartTextInputWithProperties* ( window: SDL_Window, props: SDL_Properti
 proc SDL_TextInputActive* ( window: SDL_Window ): bool {.importc.}
 proc SDL_StopTextInput* ( window: SDL_Window ): bool {.importc.}
 proc SDL_ClearComposition* ( window: SDL_Window ): bool {.importc.}
-proc SDL_SetTextInputArea* ( window: SDL_Window, rect: ptr SDL_Rect, cursor: int ): bool {.importc.}
-proc SDL_GetTextInputArea* ( window: SDL_Window, rect: var SDL_Rect, cursor: var int ): bool {.importc.}
+proc SDL_SetTextInputArea* ( window: SDL_Window, rect: ptr SDL_Rect, cursor: cint ): bool {.importc.}
+proc SDL_GetTextInputArea* ( window: SDL_Window, rect: var SDL_Rect, cursor: var cint ): bool {.importc.}
 proc SDL_HasScreenKeyboardSupport* (): bool {.importc.}
 proc SDL_ScreenKeyboardShown* ( window: SDL_Window ): bool {.importc.}
 
@@ -3834,7 +3833,7 @@ type
     language*: cstring
     country*: cstring
 
-proc SDL_GetPreferredLocales* ( count: var int ): ptr UncheckedArray[ptr SDL_Locale] {.importc.}
+proc SDL_GetPreferredLocales* ( count: var cint ): ptr UncheckedArray[ptr SDL_Locale] {.importc.}
 
 #endregion
 
@@ -3876,22 +3875,22 @@ type
     SDL_LOG_PRIORITY_COUNT
 
 proc SDL_SetLogPriorities* ( priority: SDL_LogPriority ): void {.importc.}
-proc SDL_SetLogPriority* ( category: int, priority: SDL_LogPriority ): void {.importc.}
-proc SDL_GetLogPriority* ( category: int ): SDL_LogPriority {.importc.}
+proc SDL_SetLogPriority* ( category: cint, priority: SDL_LogPriority ): void {.importc.}
+proc SDL_GetLogPriority* ( category: cint ): SDL_LogPriority {.importc.}
 proc SDL_ResetLogPriorities* (): void {.importc.}
 proc SDL_SetLogPriorityPrefix* ( priority: SDL_LogPriority, prefix: cstring ): bool {.importc.}
 
 proc SDL_Log* ( fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogTrace* ( category: int, fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogVerbose* ( category: int, fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogDebug* ( category: int, fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogInfo* ( category: int, fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogWarn* ( category: int, fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogError* ( category: int, fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogCritical* ( category: int, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogTrace* ( category: cint, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogVerbose* ( category: cint, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogDebug* ( category: cint, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogInfo* ( category: cint, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogWarn* ( category: cint, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogError* ( category: cint, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogCritical* ( category: cint, fmt: cstring ): void {.importc, varargs.}
 
-proc SDL_LogMessage* ( category: int, priority: SDL_LogPriority, fmt: cstring ): void {.importc, varargs.}
-proc SDL_LogMessageV* ( category: int, priority: SDL_LogPriority, fmt: cstring, ap: cva_list ): void {.importc, varargs.}
+proc SDL_LogMessage* ( category: cint, priority: SDL_LogPriority, fmt: cstring ): void {.importc, varargs.}
+proc SDL_LogMessageV* ( category: cint, priority: SDL_LogPriority, fmt: cstring, ap: cva_list ): void {.importc, varargs.}
 
 type
   SDL_LogOutputFunction* = proc (userdata: pointer; category: cint; priority: SDL_LogPriority; message: cstring) {.cdecl.}
@@ -3948,7 +3947,7 @@ const SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT* = 0x00000001'u # Marks the defaul
 const SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT* = 0x00000002'u # Marks the default button when escape is hit
 
 
-proc SDL_ShowMessageBox* ( messageboxdata: ptr SDL_MessageBoxData, buttonid: var int ): bool {.importc.}
+proc SDL_ShowMessageBox* ( messageboxdata: ptr SDL_MessageBoxData, buttonid: var cint ): bool {.importc.}
 proc SDL_ShowSimpleMessageBox* ( flags: SDL_MessageBoxFlags, title,message: cstring, window: SDL_Window ): bool {.importc.}
 
 #endregion
@@ -4017,7 +4016,7 @@ const SDL_BUTTON_X1MASK* =   SDL_BUTTON_MASK(SDL_BUTTON_X1)
 const SDL_BUTTON_X2MASK* =   SDL_BUTTON_MASK(SDL_BUTTON_X2)
 
 proc SDL_HasMouse* (): bool {.importc.}
-proc SDL_GetMice* ( count: var int ): ptr UncheckedArray[SDL_MouseID] {.importc.}
+proc SDL_GetMice* ( count: var cint ): ptr UncheckedArray[SDL_MouseID] {.importc.}
 proc SDL_GetMouseNameForID* ( instance_id: SDL_MouseID ): cstring {.importc.}
 proc SDL_GetMouseFocus* (): SDL_Window {.importc.}
 proc SDL_GetMouseState* ( x,y: var cfloat ): uint32 {.importc.}
@@ -4032,8 +4031,8 @@ proc SDL_CaptureMouse* ( enabled: bool ): bool {.importc, discardable.}
 type
   SDL_Cursor* = pointer
 
-proc SDL_CreateCursor* ( data,mask: ptr uint8, w,h: int, hot_x,hot_y: int ): SDL_Cursor {.importc.}
-proc SDL_CreateColorCursor* ( surface: ptr SDL_Surface, hot_x,hot_y: int ): SDL_Cursor {.importc.}
+proc SDL_CreateCursor* ( data,mask: ptr uint8, w,h: cint, hot_x,hot_y: cint ): SDL_Cursor {.importc.}
+proc SDL_CreateColorCursor* ( surface: ptr SDL_Surface, hot_x,hot_y: cint ): SDL_Cursor {.importc.}
 proc SDL_CreateSystemCursor* ( id: SDL_SystemCursor ): SDL_Cursor {.importc.}
 proc SDL_SetCursor* ( cursor: SDL_Cursor ): bool {.importc.}
 proc SDL_GetCursor* (): SDL_Cursor {.importc.}
@@ -4074,7 +4073,7 @@ proc SDL_GetThreadName* ( thread: SDL_Thread ): cstring {.importc.}
 proc SDL_GetCurrentThreadID* (): SDL_ThreadID {.importc.}
 proc SDL_GetThreadID* ( thread: SDL_Thread ): SDL_ThreadID {.importc.}
 proc SDL_SetCurrentThreadPriority* ( priority: SDL_ThreadPriority ): bool {.importc.}
-proc SDL_WaitThread* ( thread: SDL_Thread, status: var int ): void {.importc.}
+proc SDL_WaitThread* ( thread: SDL_Thread, status: var cint ): void {.importc.}
 proc SDL_GetThreadState* ( thread: SDL_Thread ): SDL_ThreadState {.importc.}
 proc SDL_DetachThread* ( thread: SDL_Thread ): void {.importc.}
 proc SDL_GetTLS* ( id: ptr SDL_TLSID ): pointer {.importc.}
@@ -4194,12 +4193,12 @@ type
 proc SDL_CreateProcessWithProperties* ( props: SDL_PropertiesID ): SDL_Process {.importc.}
 proc SDL_GetProcessProperties* ( process: SDL_Process ): SDL_PropertiesID {.importc.}
 
-proc SDL_ReadProcess* ( process: SDL_Process, datasize: csize_t, exitcode: var int ): pointer {.importc.}
+proc SDL_ReadProcess* ( process: SDL_Process, datasize: csize_t, exitcode: var cint ): pointer {.importc.}
 proc SDL_GetProcessInput* ( process: SDL_Process ): SDL_IOStream {.importc.}
 proc SDL_GetProcessOutput* ( process: SDL_Process ): SDL_IOStream {.importc.}
 
 proc SDL_KillProcess* ( process: SDL_Process, force: bool ): bool {.importc.}
-proc SDL_WaitProcess* ( process: SDL_Process, blocking: bool, exitcode: var int ): bool {.importc.}
+proc SDL_WaitProcess* ( process: SDL_Process, blocking: bool, exitcode: var cint ): bool {.importc.}
 proc SDL_DestroyProcess* ( process: SDL_Process ): void {.importc.}
 
 const SDL_PROP_PROCESS_CREATE_ARGS_POINTER* =             "SDL.process.create.args"
@@ -4258,7 +4257,7 @@ proc SDL_RenameStoragePath* ( storage: SDL_Storage, oldpath,newpath: cstring ): 
 proc SDL_CopyStorageFile* ( storage: SDL_Storage, oldpath,newpath: cstring ): bool {.importc.}
 proc SDL_GetStoragePathInfo* ( storage: SDL_Storage, path: cstring, info: var SDL_PathInfo ): bool {.importc.}
 proc SDL_GetStorageSpaceRemaining* ( storage: SDL_Storage ): uint64 {.importc.}
-proc SDL_GlobStorageDirectory* ( storage: SDL_Storage, path,pattern: cstring, flags: SDL_GlobFlags, count: var int ): ptr[cstring] {.importc.}
+proc SDL_GlobStorageDirectory* ( storage: SDL_Storage, path,pattern: cstring, flags: SDL_GlobFlags, count: var cint ): ptr[cstring] {.importc.}
 
 #endregion
 
@@ -4272,8 +4271,8 @@ when defined(SDL_PLATFORM_WINDOWS):
   proc SDL_SetWindowsMessageHook* ( callback: SDL_WindowsMessageHook, userdata: pointer ): void {.importc.}
 
 when defined(SDL_PLATFORM_WIN32) or defined(SDL_PLATFORM_WINGDK):
-  proc SDL_GetDirect3D9AdapterIndex* ( displayID: SDL_DisplayID ): int {.importc.}
-  proc SDL_GetDXGIOutputInfo* ( displayID: SDL_DisplayID, adapterIndex, outputIndex: ptr int ): bool {.importc.}
+  proc SDL_GetDirect3D9AdapterIndex* ( displayID: SDL_DisplayID ): cint {.importc.}
+  proc SDL_GetDXGIOutputInfo* ( displayID: SDL_DisplayID, adapterIndex, outputIndex: ptr cint ): bool {.importc.}
 
 type
   XEvent* = object
@@ -4283,19 +4282,19 @@ type
 proc SDL_SetX11EventHook* ( callback: SDL_X11EventHook, userdata: pointer ): void {.importc.}
 
 when defined(SDL_PLATFORM_LINUX):
-  proc SDL_SetLinuxThreadPriority* ( threadID: int64, priority: int ): bool {.importc.}
-  proc SDL_SetLinuxThreadPriorityAndPolicy* ( threadID: int64, sdlPriority, schedPolicy: int ): bool {.importc.}
+  proc SDL_SetLinuxThreadPriority* ( threadID: int64, priority: cint ): bool {.importc.}
+  proc SDL_SetLinuxThreadPriorityAndPolicy* ( threadID: int64, sdlPriority, schedPolicy: cint ): bool {.importc.}
 
 when defined(SDL_PLATFORM_IOS):
   type
     SDL_iOSAnimationCallback* = proc (userdata: poiner): void {.cdecl.}
-  proc SDL_SetiOSAnimationCallback* ( window: SDL_Window, interval: int, callback: SDL_iOSAnimationCallback, callbackParam: pointer ): bool {.importc.}
+  proc SDL_SetiOSAnimationCallback* ( window: SDL_Window, interval: cint, callback: SDL_iOSAnimationCallback, callbackParam: pointer ): bool {.importc.}
   proc SDL_SetiOSEventPump* ( enabled: bool ): void {.importc.}
 
 when defined(SDL_PLATFORM_ANDROID):
   proc SDL_GetAndroidJNIEnv* (): pointer {.importc.}
   proc SDL_GetAndroidActivity* (): pointer {.importc.}
-  proc SDL_GetAndroidSDKVersion* (): int {.importc.}
+  proc SDL_GetAndroidSDKVersion* (): cint {.importc.}
   proc SDL_IsChromebook* (): bool {.importc.}
   proc SDL_IsDeXMode* (): bool {.importc.}
   proc SDL_SendAndroidBackButton* (): void  {.importc.}
@@ -4308,8 +4307,8 @@ when defined(SDL_PLATFORM_ANDROID):
   type
     SDL_RequestAndroidPermissionCallback* = proc (userdata: void, permission: cstring, granted: bool): void {.cdecl.}
   proc SDL_RequestAndroidPermission* ( permission: cstring, cb: SDL_RequestAndroidPermissionCallback, userdata: pointer ): bool {.importc.}
-  proc SDL_ShowAndroidToast* ( message: cstring, duration, gravity, xoffset, yoffset: int ): bool {.importc.}
-  proc SDL_SendAndroidMessage* ( command: uint32, param: int ): bool {.importc.}
+  proc SDL_ShowAndroidToast* ( message: cstring, duration, gravity, xoffset, yoffset: cint ): bool {.importc.}
+  proc SDL_SendAndroidMessage* ( command: uint32, param: cint ): bool {.importc.}
 
 proc SDL_IsTablet* (): bool {.importc.}
 proc SDL_IsTV* (): bool {.importc.}
@@ -4380,9 +4379,9 @@ proc SDL_TimeToDateTime* ( ticks: SDL_Time, dt: var SDL_DateTime, localTime: boo
 proc SDL_DateTimeToTime* ( dt: ptr SDL_DateTime, ticks: var SDL_Time ): bool {.importc.}
 proc SDL_TimeToWindows* ( ticks: SDL_Time, dwLowDateTime,dwHighDateTime: var uint32 ): void {.importc.}
 proc SDL_TimeFromWindows* ( dwLowDateTime, dwHighDateTime: uint32 ): SDL_Time {.importc.}
-proc SDL_GetDaysInMonth* ( year, month: int ): int {.importc.}
-proc SDL_GetDayOfYear* ( year, month, day: int): int {.importc.}
-proc SDL_GetDayOfWeek* ( year, month, day: int ): int {.importc.}
+proc SDL_GetDaysInMonth* ( year, month: cint ): cint {.importc.}
+proc SDL_GetDayOfYear* ( year, month, day: cint): cint {.importc.}
+proc SDL_GetDayOfWeek* ( year, month, day: cint ): cint {.importc.}
 
 #endregion
 
@@ -4449,9 +4448,9 @@ proc SDL_CreateTrayMenu* ( tray: SDL_Tray ): SDL_TrayMenu {.importc.}
 proc SDL_CreateTraySubmenu* ( entry: SDL_TrayEntry ): SDL_TrayMenu {.importc.}
 proc SDL_GetTrayMenu* ( tray: SDL_Tray ): SDL_TrayMenu {.importc.}
 proc SDL_GetTraySubmenu* ( entry: SDL_TrayEntry ): SDL_TrayMenu {.importc.}
-proc SDL_GetTrayEntries* ( menu: SDL_TrayMenu, size: var int ): ptr UncheckedArray[SDL_TrayEntry] {.importc.}
+proc SDL_GetTrayEntries* ( menu: SDL_TrayMenu, size: var cint ): ptr UncheckedArray[SDL_TrayEntry] {.importc.}
 proc SDL_RemoveTrayEntry* ( entry: SDL_TrayEntry ): void {.importc.}
-proc SDL_InsertTrayEntryAt* ( menu: SDL_TrayMenu, pos: int, label: cstring, flags: SDL_TrayEntryFlags ): SDL_TrayEntry {.importc.}
+proc SDL_InsertTrayEntryAt* ( menu: SDL_TrayMenu, pos: cint, label: cstring, flags: SDL_TrayEntryFlags ): SDL_TrayEntry {.importc.}
 proc SDL_SetTrayEntryLabel* ( entry: SDL_TrayEntry, label: cstring ): void {.importc.}
 proc SDL_GetTrayEntryLabel* ( entry: SDL_TrayEntry ): cstring {.importc.}
 proc SDL_SetTrayEntryChecked* ( entry: SDL_TrayEntry, checked: bool ): void {.importc.}
@@ -4459,7 +4458,7 @@ proc SDL_GetTrayEntryChecked* ( entry: SDL_TrayEntry ): bool {.importc.}
 proc SDL_SetTrayEntryEnabled* ( entry: SDL_TrayEntry, enabled: bool ): void {.importc.}
 proc SDL_GetTrayEntryEnabled* ( entry: SDL_TrayEntry ): bool {.importc.}
 proc SDL_SetTrayEntryCallback* ( entry: SDL_TrayEntry, callback: SDL_TrayCallback, userdata: pointer ): void {.importc.}
-proc SDL_ClickTrayEntry( entry: SDL_TrayEntry ): void {.importc.}
+proc SDL_ClickTrayEntry* ( entry: SDL_TrayEntry ): void {.importc.}
 proc SDL_DestroyTray* ( tray: SDL_Tray ): void {.importc.}
 proc SDL_GetTrayEntryParent* ( entry: SDL_TrayEntry ): SDL_TrayMenu {.importc.}
 proc SDL_GetTrayMenuParentEntry* ( menu: SDL_TrayMenu ): SDL_TrayEntry {.importc.}
@@ -4486,10 +4485,10 @@ type
     y*: cfloat
     pressure*: cfloat
 
-proc SDL_GetTouchDevices* ( count: var int ): ptr UncheckedArray[SDL_TouchID] {.importc.}
+proc SDL_GetTouchDevices* ( count: var cint ): ptr UncheckedArray[SDL_TouchID] {.importc.}
 proc SDL_GetTouchDeviceName* ( touchID: SDL_TouchID ): cstring {.importc.}
 proc SDL_GetTouchDeviceType* ( touchID: SDL_TouchID ): SDL_TouchDeviceType {.importc.}
-proc SDL_GetTouchFingers* ( touchID: SDL_TouchID, count: var int ): ptr UncheckedArray[ptr SDL_Finger] {.importc.}
+proc SDL_GetTouchFingers* ( touchID: SDL_TouchID, count: var cint ): ptr UncheckedArray[ptr SDL_Finger] {.importc.}
 
 const SDL_TOUCH_MOUSEID* = cast[SDL_MouseID]( -1 )
 const SDL_MOUSE_TOUCHID* = cast[SDL_TouchID]( -1 )
@@ -4507,7 +4506,7 @@ type
 
 proc SDL_ShowOpenFileDialog* ( callback: SDL_DialogFileCallback,
                                userdata: pointer, window: SDL_Window,
-                               filters: ptr[SDL_DialogFileFilter], nfilters: int,
+                               filters: ptr[SDL_DialogFileFilter], nfilters: cint,
                                default_location: cstring, allow_many: bool
                              ): void {.importc.}
 
@@ -4519,7 +4518,7 @@ proc SDL_ShowOpenFileDialog* ( callback: SDL_DialogFileCallback,
 
 proc SDL_ShowSaveFileDialog* ( callback: SDL_DialogFileCallback,
                                userdata: pointer, window: SDL_Window,
-                               filters: ptr[SDL_DialogFileFilter], nfilters: int,
+                               filters: ptr[SDL_DialogFileFilter], nfilters: cint,
                                default_location: cstring
                              ): void {.importc.}
 
@@ -4576,16 +4575,16 @@ type
     SDL_CAMERA_POSITION_FRONT_FACING,
     SDL_CAMERA_POSITION_BACK_FACING
 
-proc SDL_GetNumCameraDrivers* (): int {.importc.}
-proc SDL_GetCameraDriver* ( index: int ): cstring {.importc.}
+proc SDL_GetNumCameraDrivers* (): cint {.importc.}
+proc SDL_GetCameraDriver* ( index: cint ): cstring {.importc.}
 proc SDL_GetCurrentCameraDriver* (): cstring {.importc.}
-proc SDL_GetCameras* ( count: var int ): ptr UncheckedArray[SDL_CameraID] {.importc.}
-proc SDL_GetCameraSupportedFormats* ( devid: SDL_CameraID, count: var int ): ptr UncheckedArray[SDL_CameraSpec] {.importc.}
+proc SDL_GetCameras* ( count: var cint ): ptr UncheckedArray[SDL_CameraID] {.importc.}
+proc SDL_GetCameraSupportedFormats* ( devid: SDL_CameraID, count: var cint ): ptr UncheckedArray[SDL_CameraSpec] {.importc.}
 proc SDL_GetCameraName* ( instance_id: SDL_CameraID ): cstring {.importc.}
 proc SDL_GetCameraPosition* ( instance_id: SDL_CameraID ): SDL_CameraPosition {.importc.}
 
 proc SDL_OpenCamera* ( instance_id: SDL_CameraID, spec: ptr SDL_CameraSpec ): SDL_Camera {.importc.}
-proc SDL_GetCameraPermissionState* ( camera: SDL_Camera ): int {.importc.}
+proc SDL_GetCameraPermissionState* ( camera: SDL_Camera ): cint {.importc.}
 proc SDL_GetCameraID* ( camera: SDL_Camera ): SDL_CameraID {.importc.}
 proc SDL_GetCameraProperties* ( camera: SDL_Camera ): SDL_PropertiesID {.importc.}
 proc SDL_GetCameraFormat* ( camera: SDL_Camera, spec: ptr SDL_CameraSpec ): bool {.importc.}
@@ -5117,8 +5116,8 @@ type
     SDL_PEEKEVENT,
     SDL_GETEVENT
 
-proc SDL_PeepEvents* ( events: ptr[SDL_Event], numevents: int, action: SDL_EventAction, minType,maxType: uint32 ): int {.importc.}
-proc SDL_PeepEvents* ( events: openarray[SDL_Event], action: SDL_EventAction, minType,maxType: uint32 ): int {.importc.}
+proc SDL_PeepEvents* ( events: ptr[SDL_Event], numevents: cint, action: SDL_EventAction, minType,maxType: uint32 ): cint {.importc.}
+proc SDL_PeepEvents* ( events: openarray[SDL_Event], action: SDL_EventAction, minType,maxType: uint32 ): cint {.importc.}
 proc SDL_HasEvent* ( kind: uint32 ): bool {.importc.}
 proc SDL_HasEvents* ( minType,maxType: uint32 ): bool {.importc.}
 proc SDL_FlushEvent* ( kind: uint32 ): void {.importc.}
@@ -5138,7 +5137,7 @@ proc SDL_RemoveEventWatch* ( filter: SDL_EventFilter, userdata: pointer ): void 
 proc SDL_FilterEvents* ( filter: SDL_EventFilter, userdata: pointer ): void {.importc.}
 proc SDL_SetEventEnabled* ( kind: uint32, enabled: bool ): void {.importc.}
 proc SDL_EventEnabled* ( kind: uint32 ): bool {.importc.}
-proc SDL_RegisterEvents* ( numevents: int ): uint32 {.importc.}
+proc SDL_RegisterEvents* ( numevents: cint ): uint32 {.importc.}
 proc SDL_GetWindowFromEvent* ( event: ptr SDL_Event ): SDL_Window {.importc.}
 
 #endregion
@@ -5175,9 +5174,9 @@ type
   #   h*: cint
   #   refcount*: cint
 
-proc SDL_GetNumRenderDrivers* (): int {.importc.}
-proc SDL_GetRenderDriver* ( index: int ): cstring {.importc.}
-proc SDL_CreateWindowAndRenderer*(title: cstring, width, height: int, window_flags: SDL_WindowFlags, window:var SDL_Window, renderer:var SDL_Renderer): bool {.importc.}
+proc SDL_GetNumRenderDrivers* (): cint {.importc.}
+proc SDL_GetRenderDriver* ( index: cint ): cstring {.importc.}
+proc SDL_CreateWindowAndRenderer*(title: cstring, width, height: cint, window_flags: SDL_WindowFlags, window:var SDL_Window, renderer: var SDL_Renderer): bool {.importc.}
 proc SDL_CreateRenderer*(window: SDL_Window, name: cstring): SDL_Renderer {.importc.}
 proc SDL_CreateRendererWithProperties* ( props: SDL_PropertiesID ): SDL_Renderer {.importc.}
 proc SDL_CreateSoftwareRenderer* ( surface: ptr SDL_Surface ): SDL_Renderer {.importc.}
@@ -5185,9 +5184,9 @@ proc SDL_GetRenderer* ( window: SDL_Window ): SDL_Renderer {.importc.}
 proc SDL_GetRenderWindow* ( renderer: SDL_Renderer ): SDL_Window {.importc.}
 proc SDL_GetRendererName* ( renderer: SDL_Renderer ): cstring {.importc.}
 proc SDL_GetRendererProperties* ( renderer: SDL_Renderer ): SDL_PropertiesID {.importc.}
-proc SDL_GetRenderOutputSize* ( renderer: SDL_Renderer, w,h: var int ): bool {.importc.}
-proc SDL_GetCurrentRenderOutputSize* ( renderer: SDL_Renderer, w,h: var int ): bool {.importc.}
-proc SDL_CreateTexture* ( renderer: SDL_Renderer, format: SDL_PixelFormat, access: SDL_TextureAccess, w,h: int ): SDL_Texture {.importc.}
+proc SDL_GetRenderOutputSize* ( renderer: SDL_Renderer, w,h: var cint ): bool {.importc.}
+proc SDL_GetCurrentRenderOutputSize* ( renderer: SDL_Renderer, w,h: var cint ): bool {.importc.}
+proc SDL_CreateTexture* ( renderer: SDL_Renderer, format: SDL_PixelFormat, access: SDL_TextureAccess, w,h: cint ): SDL_Texture {.importc.}
 proc SDL_CreateTextureFromSurface* ( renderer: SDL_Renderer, surface: ptr SDL_Surface ): SDL_Texture {.importc.}
 proc SDL_CreateTextureWithProperties* ( renderer: SDL_Renderer, props: SDL_PropertiesID ): SDL_Texture {.importc.}
 proc SDL_GetTextureProperties* ( texture: SDL_Texture ): SDL_PropertiesID {.importc.}
@@ -5205,17 +5204,17 @@ proc SDL_SetTextureBlendMode* ( texture: SDL_Texture, blendMode: SDL_BlendMode )
 proc SDL_GetTextureBlendMode* ( texture: SDL_Texture, blendMode: var SDL_BlendMode ): bool {.importc.}
 proc SDL_SetTextureScaleMode* ( texture: SDL_Texture, scaleMode: SDL_ScaleMode ): bool {.importc, discardable.}
 proc SDL_GetTextureScaleMode* ( texture: SDL_Texture, scaleMode: var SDL_ScaleMode ): bool {.importc.}
-proc SDL_UpdateTexture* ( texture: SDL_Texture, rect: ptr[SDL_Rect], pixels: ptr[uint8], pitch: int ): bool {.importc.}
-proc SDL_UpdateTexture* ( texture: SDL_Texture, rect: ptr[SDL_Rect], pixels: ptr UncheckedArray[uint8], pitch: int ): bool {.importc.}
-proc SDL_UpdateYUVTexture* ( texture: SDL_Texture, rect: ptr SDL_Rect, Yplane: ptr[uint8], Ypitch: int, Uplane: ptr[uint8], Upitch: int, Vplane: ptr[uint8], Vpitch: int ): bool {.importc.}
-proc SDL_UpdateNVTexture* ( texture: SDL_Texture, rect: ptr SDL_Rect, Yplane: ptr[uint8], Ypitch: int, UVplane: ptr[uint8], UVpitch: int ): bool {.importc.}
-proc SDL_LockTexture* ( texture: SDL_Texture, rect: ptr SDL_Rect, pixels: var pointer, pitch: var int): bool {.importc.}
+proc SDL_UpdateTexture* ( texture: SDL_Texture, rect: ptr[SDL_Rect], pixels: ptr[uint8], pitch: cint ): bool {.importc.}
+proc SDL_UpdateTexture* ( texture: SDL_Texture, rect: ptr[SDL_Rect], pixels: ptr UncheckedArray[uint8], pitch: cint ): bool {.importc.}
+proc SDL_UpdateYUVTexture* ( texture: SDL_Texture, rect: ptr SDL_Rect, Yplane: ptr[uint8], Ypitch: cint, Uplane: ptr[uint8], Upitch: cint, Vplane: ptr[uint8], Vpitch: cint ): bool {.importc.}
+proc SDL_UpdateNVTexture* ( texture: SDL_Texture, rect: ptr SDL_Rect, Yplane: ptr[uint8], Ypitch: cint, UVplane: ptr[uint8], UVpitch: cint ): bool {.importc.}
+proc SDL_LockTexture* ( texture: SDL_Texture, rect: ptr SDL_Rect, pixels: var pointer, pitch: var cint): bool {.importc.}
 proc SDL_LockTextureToSurface* ( texture: SDL_Texture, rect: ptr SDL_Rect, surface: var ptr SDL_Surface ): bool {.importc.}
 proc SDL_UnlockTexture* ( texture: SDL_Texture ): void {.importc.}
 proc SDL_SetRenderTarget* ( renderer: SDL_Renderer, texture: SDL_Texture ): bool {.importc, discardable.}
 proc SDL_GetRenderTarget* ( renderer: SDL_Renderer ): SDL_Texture {.importc.}
-proc SDL_SetRenderLogicalPresentation* ( renderer: SDL_Renderer, w,h: int, mode: SDL_RendererLogicalPresentation ): bool {.importc, discardable.}
-proc SDL_GetRenderLogicalPresentation* ( renderer: SDL_Renderer, w,h: var int, mode: var SDL_RendererLogicalPresentation ):bool {.importc.}
+proc SDL_SetRenderLogicalPresentation* ( renderer: SDL_Renderer, w,h: cint, mode: SDL_RendererLogicalPresentation ): bool {.importc, discardable.}
+proc SDL_GetRenderLogicalPresentation* ( renderer: SDL_Renderer, w,h: var cint, mode: var SDL_RendererLogicalPresentation ):bool {.importc.}
 proc SDL_GetRenderLogicalPresentationRect* ( renderer: SDL_Renderer, rect: var SDL_FRect ): bool {.importc.}
 proc SDL_RenderCoordinatesFromWindow* ( renderer: SDL_Renderer, window_x,window_y: cfloat, x,y: var cfloat ): bool {.importc.}
 proc SDL_RenderCoordinatesToWindow* ( renderer: SDL_Renderer, x,y: cfloat, window_x,window_y: var cfloat ): bool {.importc.}
@@ -5248,7 +5247,7 @@ proc SDL_RenderRect* ( renderer: SDL_Renderer, rect: ptr SDL_FRect ): bool {.imp
 proc SDL_RenderRect* ( renderer: SDL_Renderer, rect: SDL_FRect ): bool {.discardable.} =
   SDL_RenderRect(renderer, rect.addr)
 proc SDL_RenderRects* ( renderer: SDL_Renderer, rects: openarray[SDL_FRect] ): bool {.importc, discardable.}
-proc SDL_RenderRects* ( renderer: SDL_Renderer, rects: ptr[SDL_FRect], count: int ): bool {.importc, discardable.}
+proc SDL_RenderRects* ( renderer: SDL_Renderer, rects: ptr[SDL_FRect], count: cint ): bool {.importc, discardable.}
 proc SDL_RenderFillRect* ( renderer: SDL_Renderer, rect: ptr SDL_FRect ): bool {.importc, discardable.}
 proc SDL_RenderFillRect* ( renderer: SDL_Renderer, rect: SDL_FRect ): bool {.discardable.} =
   SDL_RenderFillRect(renderer, rect.addr)
@@ -5258,9 +5257,9 @@ proc SDL_RenderTextureRotated* ( renderer: SDL_Renderer, texture: SDL_Texture, s
 proc SDL_RenderTextureAffine* ( renderer: SDL_Renderer, texture: SDL_Texture, srcrect: ptr SDL_FRect, origin,right,down: ptr SDL_FPoint): bool {.importc, discardable.}
 proc SDL_RenderTextureTiled* ( renderer: SDL_Renderer, texture: SDL_Texture, srcrect: ptr SDL_FRect, scale: cfloat, dstrect: ptr SDL_FRect ): bool {.importc, discardable.}
 proc SDL_RenderTexture9Grid* ( renderer: SDL_Renderer, texture: SDL_Texture, srcrect: ptr SDL_FRect, left_width, right_width, top_height, bottom_height, scale: cfloat, dstrect: ptr SDL_FRect): bool {.importc, discardable.}
-proc SDL_RenderGeometry* ( renderer: SDL_Renderer, texture: SDL_Texture, vertices: ptr[SDL_Vertex], num_vertices: int, indices: ptr[cint], num_indices: int ): bool {.importc, discardable.}
+proc SDL_RenderGeometry* ( renderer: SDL_Renderer, texture: SDL_Texture, vertices: ptr[SDL_Vertex], num_vertices: cint, indices: ptr[cint], num_indices: cint ): bool {.importc, discardable.}
 proc SDL_RenderGeometry* ( renderer: SDL_Renderer, texture: SDL_Texture, vertices: openarray[SDL_Vertex], indices: openarray[cint] ): bool {.importc, discardable.}
-proc SDL_RenderGeometryRaw* ( renderer: SDL_Renderer, texture: SDL_Texture, xy: ptr cfloat, xy_stride: int, color: ptr SDL_FColor, color_stride: int, uv: ptr cfloat, uv_stride: int, num_vertices: int, indices: pointer, num_indices: int, size_indices: int ): bool {.importc, discardable.}
+proc SDL_RenderGeometryRaw* ( renderer: SDL_Renderer, texture: SDL_Texture, xy: ptr cfloat, xy_stride: cint, color: ptr SDL_FColor, color_stride: cint, uv: ptr cfloat, uv_stride: cint, num_vertices: cint, indices: pointer, num_indices: cint, size_indices: cint ): bool {.importc, discardable.}
 proc SDL_RenderReadPixels* ( renderer: SDL_Renderer, rect: ptr SDL_Rect ): ptr SDL_Surface {.importc.}
 proc SDL_RenderPresent*(renderer: SDL_Renderer): bool {.importc, discardable.}
 proc SDL_DestroyTexture* ( texture: SDL_Texture ): void {.importc.}
@@ -5271,8 +5270,8 @@ proc SDL_GetRenderMetalLayer* ( renderer: SDL_Renderer ): pointer {.importc.}
 proc SDL_GetRenderMetalCommandEncoder* ( renderer: SDL_Renderer ): pointer {.importc.}
 
 proc SDL_AddVulkanRenderSemaphores* ( renderer: SDL_Renderer, wait_stage_mask: uint32, wait_semaphore: int64, signal_semaphore: int64 ): bool {.importc.}
-proc SDL_SetRenderVSync* ( renderer: SDL_Renderer, vsync: int ): bool {.importc, discardable.}
-proc SDL_GetRenderVSync* ( renderer: SDL_Renderer, vsync: var int ): bool {.importc.}
+proc SDL_SetRenderVSync* ( renderer: SDL_Renderer, vsync: cint ): bool {.importc, discardable.}
+proc SDL_GetRenderVSync* ( renderer: SDL_Renderer, vsync: var cint ): bool {.importc.}
 proc SDL_RenderDebugText* ( renderer: SDL_Renderer, x,y: cfloat, str: cstring ): bool {.importc, discardable.}
 proc SDL_RenderDebugTextFormat* ( renderer: SDL_Renderer, x,y: cfloat, fmt: cstring ): bool {.importc, varargs, discardable.}
 

@@ -74,7 +74,7 @@ while not quit:
       inc total_samples_generated
 
     # Feed the new data to the stream. It will queue at the end, and trickle out as the hardware needs more data. */
-    discard SDL_PutAudioStreamData(stream, samples.addr, sizeof(samples))
+    discard SDL_PutAudioStreamData(stream, samples.addr, sizeof(samples).cint)
 
   # We're not doing anything with the renderer, so just blank it out.
   SDL_RenderClear(renderer)

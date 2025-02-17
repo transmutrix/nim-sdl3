@@ -175,7 +175,7 @@ var
   )
   primary_display: SDL_DisplayID
   texprops: SDL_PropertiesID
-  zoom = 2
+  zoom: cint = 2
 
 if not SDL_SetAppMetadata("SDL 3 BytePusher", "1.0", "com.example.SDL3BytePusher"):
   echo "Can't set metadata: ", SDL_GetError()
@@ -200,8 +200,8 @@ vm.display_help = true
 
 primary_display = SDL_GetPrimaryDisplay()
 if SDL_GetDisplayUsableBounds(primary_display, usable_bounds):
-  let zoom_w: int = (usable_bounds.w - usable_bounds.x) * 2 div 3 div SCREEN_W
-  let zoom_h: int = (usable_bounds.h - usable_bounds.y) * 2 div 3 div SCREEN_H
+  let zoom_w: cint = (usable_bounds.w - usable_bounds.x) * 2 div 3 div SCREEN_W
+  let zoom_h: cint = (usable_bounds.h - usable_bounds.y) * 2 div 3 div SCREEN_H
   zoom = max(1, min(zoom_w, zoom_h))
 
 if not SDL_CreateWindowAndRenderer("SDL 3 BytePusher",

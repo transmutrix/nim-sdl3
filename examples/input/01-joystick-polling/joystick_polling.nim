@@ -80,7 +80,7 @@ while not quit:
   let text = if joystick != nil:  $SDL_GetJoystickName(joystick)
                            else:  "Plug in a joystick, please."
 
-  var winw, winh: int
+  var winw, winh: cint
   discard SDL_GetWindowSize(window, winw, winh)
 
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)
