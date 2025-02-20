@@ -2067,8 +2067,8 @@ type
   SDL_GPUShader* = pointer
 
   SDL_GPUGraphicsPipelineCreateInfo* {.bycopy.} = object
-    vertex_shader*: ptr SDL_GPUShader
-    fragment_shader*: ptr SDL_GPUShader
+    vertex_shader*: SDL_GPUShader
+    fragment_shader*: SDL_GPUShader
     vertex_input_state*: SDL_GPUVertexInputState
     primitive_type*: SDL_GPUPrimitiveType
     rasterizer_state*: SDL_GPURasterizerState
@@ -2094,13 +2094,13 @@ type
     props*: SDL_PropertiesID
 
   SDL_GPUColorTargetInfo* {.bycopy.} = object
-    texture*: ptr SDL_GPUTexture
+    texture*: SDL_GPUTexture
     mip_level*: uint32
     layer_or_depth_plane*: uint32
     clear_color*: SDL_FColor
     load_op*: SDL_GPULoadOp
     store_op*: SDL_GPUStoreOp
-    resolve_texture*: ptr SDL_GPUTexture
+    resolve_texture*: SDL_GPUTexture
     resolve_mip_level*: uint32
     resolve_layer*: uint32
     cycle*: bool
@@ -2245,7 +2245,7 @@ proc SDL_SetGPUAllowedFramesInFlight* ( device: SDL_GPUDevice, allowed_frames_in
 proc SDL_GetGPUSwapchainTextureFormat* ( device: SDL_GPUDevice, window: SDL_Window ): SDL_GPUTextureFormat {.importc.}
 proc SDL_AcquireGPUSwapchainTexture* ( command_buffer: SDL_GPUCommandBuffer, window: SDL_Window, swapchain_texture: SDL_GPUTexture, swapchain_texture_width: var uint32, swapchain_texture_height: var uint32 ): bool {.importc.}
 proc SDL_WaitForGPUSwapchain* ( device: SDL_GPUDevice, window: SDL_Window ): bool {.importc.}
-proc SDL_WaitAndAcquireGPUSwapchainTexture* ( command_buffer: SDL_GPUCommandBuffer, window: SDL_Window, swapchain_texture: SDL_GPUTexture, swapchain_texture_width: var uint32, swapchain_texture_height: var uint32 ): bool {.importc.}
+proc SDL_WaitAndAcquireGPUSwapchainTexture* ( command_buffer: SDL_GPUCommandBuffer, window: SDL_Window, swapchain_texture: ptr SDL_GPUTexture, swapchain_texture_width: ptr uint32, swapchain_texture_height: ptr uint32 ): bool {.importc.}
 proc SDL_SubmitGPUCommandBuffer* ( command_buffer: SDL_GPUCommandBuffer ): bool {.importc.}
 
 proc SDL_SubmitGPUCommandBufferAndAcquireFence* ( command_buffer: SDL_GPUCommandBuffer ): SDL_GPUFence {.importc.}
@@ -2279,13 +2279,13 @@ const SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ* = (1'u shl 3) # Buffer supports
 const SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ*  = (1'u shl 4) # Buffer supports storage reads in the compute stage.
 const SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE* = (1'u shl 5) # Buffer supports storage writes in the compute stage.
 
-const SDL_GPU_SHADERFORMAT_INVALID*  = 0
-const SDL_GPU_SHADERFORMAT_PRIVATE*  = (1'u shl 0) # Shaders for NDA'd platforms.
-const SDL_GPU_SHADERFORMAT_SPIRV*    = (1'u shl 1) # SPIR-V shaders for Vulkan.
-const SDL_GPU_SHADERFORMAT_DXBC*     = (1'u shl 2) # DXBC SM5_1 shaders for D3D12.
-const SDL_GPU_SHADERFORMAT_DXIL*     = (1'u shl 3) # DXIL SM6_0 shaders for D3D12.
-const SDL_GPU_SHADERFORMAT_MSL*      = (1'u shl 4) # MSL shaders for Metal.
-const SDL_GPU_SHADERFORMAT_METALLIB* = (1'u shl 5) # Precompiled metallib shaders for Metal.
+const SDL_GPU_SHADERFORMAT_INVALID*  = uint32 0
+const SDL_GPU_SHADERFORMAT_PRIVATE*  = uint32 (1'u shl 0) # Shaders for NDA'd platforms.
+const SDL_GPU_SHADERFORMAT_SPIRV*    = uint32 (1'u shl 1) # SPIR-V shaders for Vulkan.
+const SDL_GPU_SHADERFORMAT_DXBC*     = uint32 (1'u shl 2) # DXBC SM5_1 shaders for D3D12.
+const SDL_GPU_SHADERFORMAT_DXIL*     = uint32 (1'u shl 3) # DXIL SM6_0 shaders for D3D12.
+const SDL_GPU_SHADERFORMAT_MSL*      = uint32 (1'u shl 4) # MSL shaders for Metal.
+const SDL_GPU_SHADERFORMAT_METALLIB* = uint32 (1'u shl 5) # Precompiled metallib shaders for Metal.
 
 const SDL_GPU_COLORCOMPONENT_R* = (1'u shl 0) # the red component
 const SDL_GPU_COLORCOMPONENT_G* = (1'u shl 1) # the green component
